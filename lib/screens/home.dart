@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_complete_guide/screens/signin.dart';
+import 'package:close_contact/screens/signin.dart';
+import 'package:close_contact/widgets/profile_card.dart';
+import 'package:close_contact/widgets/card_stack.dart';
+import 'package:close_contact/widgets/background.dart';
 
 class Home extends StatefulWidget {
   User user;
@@ -14,23 +17,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(title: const Text("Home Page")),
-        body: Column(
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Text('Hi ${widget.user.displayName}'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => SignIn()),
-                );
-              },
-              child: const Text('Sign Out'),
-            ),
-          ],
-        ));
+      body: Stack(
+          children: const [
+            BackgroudCurveWidget(),
+            CardsStackWidget(),
+          ]),
+        );
   }
 }
+enum Swipe { left, right, none }

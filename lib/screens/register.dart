@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_complete_guide/authentication/fire_auth.dart';
-import 'package:flutter_complete_guide/authentication/validator.dart';
-import 'package:flutter_complete_guide/screens/home.dart';
+import 'package:close_contact/authentication/fire_auth.dart';
+import 'package:close_contact/authentication/validator.dart';
+import 'package:close_contact/screens/home.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);

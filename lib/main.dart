@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/screens/login.dart';
+import 'package:close_contact/screens/login.dart';
 
 void main() => runApp(const MyApp());
 

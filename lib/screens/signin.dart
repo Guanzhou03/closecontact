@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_complete_guide/authentication/fire_auth.dart';
-import 'package:flutter_complete_guide/authentication/validator.dart';
-import 'package:flutter_complete_guide/screens/home.dart';
-import 'package:flutter_complete_guide/screens/register.dart';
+import 'package:close_contact/authentication/fire_auth.dart';
+import 'package:close_contact/authentication/validator.dart';
+import 'package:close_contact/screens/home.dart';
+import 'package:close_contact/screens/register.dart';
 
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
