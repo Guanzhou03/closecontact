@@ -17,8 +17,8 @@ class BackgroudCurveWidget extends StatelessWidget {
         ),
         gradient: LinearGradient(
           colors: <Color>[
-            Color(0xFFFD0E42),
-            Color(0xFFC30F31),
+            Color(0xFFFFB300),
+            Color(0xFFFF6F00),
           ],
         ),
       ),
@@ -27,7 +27,7 @@ class BackgroudCurveWidget extends StatelessWidget {
         child: Text(
           'Find Close Contacts',
           style: TextStyle(
-            fontFamily: 'Nunito',
+            // fontFamily: 'Murray Hill',
             fontWeight: FontWeight.w800,
             color: Colors.white,
             fontSize: 28,

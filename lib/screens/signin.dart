@@ -15,8 +15,7 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      //backgroundColor: Colors.amber[50],
+      backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -33,7 +32,7 @@ class SignIn extends StatelessWidget {
                         fontFamily: 'Murray Hill',
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w900,
-                        fontSize: 70),
+                        fontSize: 60),
                   )),
               Container(
                   alignment: Alignment.center,

@@ -18,7 +18,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(_title)),
+        backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -31,9 +31,11 @@ class Register extends StatelessWidget {
                   child: const Text(
                     'Close Contact',
                     style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30),
+                        color: Colors.brown,
+                        fontFamily: 'Murray Hill',
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 60),
                   )),
               Container(
                   alignment: Alignment.center,
@@ -43,7 +45,7 @@ class Register extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   )),
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                 child: TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
