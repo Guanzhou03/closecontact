@@ -1,3 +1,4 @@
+import 'package:close_contact/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/authentication/fire_auth.dart';
@@ -103,7 +104,7 @@ class Register extends StatelessWidget {
                       );
                       if (user != null) {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home(user)),
+                          MaterialPageRoute(builder: (context) => LogIn()),
                         );
                       }
                     }
