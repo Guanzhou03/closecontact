@@ -89,3 +89,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Proxima
+      fonts: 
+        - asset: fonts/Proxima Nova Alt Light.otf 
+    - family: Courgette
+      fonts: 
+        - asset: fonts/Courgette-Regular.ttf
+    - family: Murray Hill
+      fonts: 
+        - asset: fonts/Murray Hill Bold.otf

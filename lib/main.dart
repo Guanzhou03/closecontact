@@ -13,8 +13,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: _title,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.orange,
+          backgroundColor: Colors.amber[50],
+        ),
+        primaryColor: Colors.amber[700],
+        fontFamily: 'Proxima',
+      ),
       home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
+        appBar: AppBar(
+          title: const Text(_title),
+        ),
         body: const LogIn(),
       ),
     );

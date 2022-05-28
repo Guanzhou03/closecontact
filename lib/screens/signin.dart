@@ -15,6 +15,8 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      //backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -27,16 +29,20 @@ class SignIn extends StatelessWidget {
                   child: const Text(
                     'Close Contact',
                     style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30),
+                        color: Colors.brown,
+                        fontFamily: 'Murray Hill',
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 70),
                   )),
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: const Text(
                     'Sign in',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   )),
               Container(
                 padding: const EdgeInsets.all(10),
