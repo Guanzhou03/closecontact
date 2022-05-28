@@ -22,6 +22,10 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
         name: 'Johnny Depp',
         interests: 'Squash',
         imageAsset: 'assets/images/depp.jpg'),
+    const Profile(
+        name: 'Amber Heard',
+        interests: 'Testing',
+        imageAsset: 'assets/images/heard.jpg'),
   ];
 
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
