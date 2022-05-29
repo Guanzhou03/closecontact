@@ -1,16 +1,14 @@
-# flutter_complete_guide
+# Orbital 2022 Project - Close Contact
 
-A new Flutter project.
+Welcome to the GitHub Repo of Close Contact, a project done during Orbital 2022 at Apollo 11 level.
 
-## Getting Started
+## Team Members:
 
-This project is a starting point for a Flutter application.
+Alvin Jiang Min Jun
 
-A few resources to get you started if this is your first Flutter project:
+Chen Guanzhou
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Click here for our Project Documentation](https://docs.google.com/document/d/1XsqmUDs44Psu4BHj9sLlEwM9g26gF499aNpOLsVZE-A/edit?usp=sharing)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
