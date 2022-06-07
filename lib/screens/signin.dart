@@ -4,6 +4,7 @@ import 'package:close_contact/authentication/fire_auth.dart';
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/screens/home.dart';
 import 'package:close_contact/screens/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class SignIn extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +89,14 @@ class SignIn extends StatelessWidget {
                         password: _passwordController.text,
                       );
                       if (user != null) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home(user)),
-                        );
+                        if (!user.emailVerified) {
+                          showAlertDialog(context);
+                          await user.sendEmailVerification();
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => Home(user)),
+                          );
+                        }
                       }
                     }
                   },
@@ -116,6 +123,33 @@ class SignIn extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // Create button
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Email Verification"),
+      content: const Text("Please verify your email before proceeding."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
