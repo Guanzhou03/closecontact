@@ -38,6 +38,10 @@ dependencies:
   firebase_auth: ^3.3.18
   user_profile_avatar: ^0.1.1
   multiselect_formfield: ^0.1.7
+  image_picker: ^0.8.5+3
+  video_player: ^2.4.4
+  persistent_bottom_nav_bar: ^4.0.2
+  persistent_bottom_nav_bar_v2: ^4.2.3
 
 dev_dependencies:
   flutter_test:

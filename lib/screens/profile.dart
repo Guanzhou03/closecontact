@@ -1,18 +1,38 @@
 import 'package:close_contact/widgets/sports_button.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/screens/signin.dart';
-import 'package:close_contact/widgets/profile_card.dart';
-import 'package:close_contact/widgets/card_stack.dart';
-import 'package:close_contact/widgets/background.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:close_contact/widgets/sports_button.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:close_contact/widgets/bottom_nav_bar.dart';
 
-void main() => runApp(MaterialApp(home: Profile()));
 
-class Profile extends StatelessWidget {
-  Profile({Key? key}) : super(key: key);
+class MyProfilePage extends StatefulWidget {
+  User user;
+  MyProfilePage(this.user, {Key? key}) : super(key: key);
+
+  @override
+  State<MyProfilePage> createState() => Profile();
+
+}
+
+class Profile extends State<MyProfilePage> {
+  File? _image;
+
+  Future getImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemp = File(image.path);
+
+    setState(() {
+      this._image = imageTemp;
+    });
+  }
 
   static const String _title = 'Profile Screen';
   final List<String> testList = ['1', '2', '3', '4', '5'];
@@ -106,7 +126,13 @@ class Profile extends StatelessWidget {
                                       ),
                                     ]),
                                 child: Center(
-                                  child: Icon(Icons.add, color: Colors.grey),
+                                  child: ElevatedButton(child: Icon(Icons.add, color: Colors.grey),
+                                      onPressed:() => {
+                                    getImage()
+                                         },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.white,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0)))
                                 ),
                               ),
                             )
@@ -247,6 +273,7 @@ class Profile extends StatelessWidget {
                   child: const Text('Log Out'),
                   style: ElevatedButton.styleFrom(primary: Colors.red),
                   onPressed: () async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
                   },
                 ),
               ),
