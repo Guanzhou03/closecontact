@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 void main() => runApp(SportsApp());
-late String _myActivitiesResult;
+ String activitiesResult = "";
+
 String getActivities() {
-  return _myActivitiesResult;
+  return activitiesResult;
 }
+
 class SportsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class _MyHomePageState extends State<Sports> {
   void initState() {
     super.initState();
     _myActivities = [];
-    _myActivitiesResult = '';
+
   }
 
   _saveForm() {
@@ -37,7 +39,7 @@ class _MyHomePageState extends State<Sports> {
     if (form.validate()) {
       form.save();
       setState(() {
-        _myActivitiesResult = _myActivities.toString();
+        activitiesResult = _myActivities.toString();
       });
     }
   }
@@ -45,9 +47,6 @@ class _MyHomePageState extends State<Sports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MultiSelect Formfield Example'),
-      ),
       body: Center(
         child: Form(
           key: formKey,
@@ -123,12 +122,13 @@ class _MyHomePageState extends State<Sports> {
                 padding: EdgeInsets.all(8),
                 child: ElevatedButton(
                   child: Text('Save'),
-                  onPressed: _saveForm,
+                  onPressed:() {_saveForm();
+                    },
                 ),
               ),
               Container(
                 padding: EdgeInsets.all(16),
-                child: Text(_myActivitiesResult),
+                child: Text(activitiesResult),
               )
             ],
           ),

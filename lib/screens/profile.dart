@@ -21,6 +21,27 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class Profile extends State<MyProfilePage> {
+  List? _myActivities;
+  late String _myActivitiesResult;
+  final formKey = new GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _myActivities = [];
+    _myActivitiesResult = '';
+  }
+
+  _saveForm() {
+    var form = formKey.currentState!;
+    if (form.validate()) {
+      form.save();
+      setState(() {
+        _myActivitiesResult = _myActivities.toString();
+      });
+    }
+  }
+
   File? _image;
   User user;
   Profile(this.user);
@@ -173,59 +194,83 @@ class Profile extends State<MyProfilePage> {
                 ),
               ),
               Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
-                  child: Column(children: <Widget>[
-                    const Text('My Interests ', style: TextStyle(fontSize: 14)),
-                  ])),
-              Container(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      suffixIcon: DropdownButtonFormField(
-                        items: <String>[
-                          'Sports',
-                          'Activities',
-                          'Hobbies',
-                          'Talents'
-                        ].map((String value) {
-                          return DropdownMenuItem<String>(
-                              onTap: () {
-                                sportsTapped = true;
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: const Text('Sports'),
-                                          content: SportsApp(),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  context, 'Cancel'),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => {
-                                                value = getActivities(),
-                                                _activities = getActivities(),
-                                                Navigator.pop(context, 'OK')
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
-                              },
-                              value: value,
-                              child: Text(value, textAlign: TextAlign.center));
-                        }).toList(),
-                        onChanged: (_) {},
-                      ),
-                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      border: OutlineInputBorder(),
-                      labelText: "Add your interests",
-                      labelStyle: TextStyle(fontSize: 13)),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(1.0)
+                  ),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: MultiSelectFormField(
+                  fillColor: Colors.amber[50],
+                  title: Text("My Interests"),
+                  autovalidate: AutovalidateMode.disabled,
+                  chipBackGroundColor: Colors.blue,
+                  chipLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                  checkBoxActiveColor: Colors.blue,
+                  checkBoxCheckColor: Colors.white,
+                  dialogShapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  validator: (value) {
+                    if (value == null || value.length == 0) {
+                      return 'Please select one or more options';
+                    }
+                    return null;
+                  },
+                  dataSource: [
+                    {
+                      "display": "Running",
+                      "value": "Running",
+                    },
+                    {
+                      "display": "Climbing",
+                      "value": "Climbing",
+                    },
+                    {
+                      "display": "Chess",
+                      "value": "Chess",
+                    },
+                    {
+                      "display": "Swimming",
+                      "value": "Swimming",
+                    },
+                    {
+                      "display": "Music",
+                      "value": "Music",
+                    },
+                    {
+                      "display": "Mahjong",
+                      "value": "Mahjong",
+                    },
+                    {
+                      "display": "Football",
+                      "value": "Football",
+                    },
+                  ],
+                  textField: 'display',
+                  valueField: 'value',
+                  okButtonLabel: 'OK',
+                  cancelButtonLabel: 'CANCEL',
+                  hintWidget: Text('Please choose one or more'),
+                  initialValue: _myActivities,
+                  onSaved: (value) {
+                    if (value == null) return;
+                    setState(() {
+                      _myActivities = value;
+                    });
+                  },
                 ),
               ),
+          // Container(
+          //   padding: EdgeInsets.all(8),
+          //   child: ElevatedButton(
+          //     child: Text('Save'),
+          //     onPressed: _saveForm,
+          //   ),
+          // ),
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+            child: Text(_myActivitiesResult),
+          ),
               Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
@@ -276,7 +321,7 @@ class Profile extends State<MyProfilePage> {
                           _year = value;
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value, textAlign: TextAlign.center),
+                            child: Text(value, textAlign: TextAlign.right),
                           );
                         }).toList(),
                         onChanged: (_) {},
