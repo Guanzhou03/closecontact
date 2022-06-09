@@ -47,6 +47,7 @@ class Profile extends State<MyProfilePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+          resizeToAvoidBottomInset: false,
       backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -108,11 +109,16 @@ class Profile extends State<MyProfilePage> {
                                           // changes position of shadow
                                         ),
                                       ]),
-                                  child: Icon(
+                              child: ElevatedButton(
+                                onPressed: () => getImage(),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.redAccent,
+                                    shape: CircleBorder()),
+                                child: Icon(
                                     Icons.camera_alt,
                                     size: 45,
                                     color: Colors.white,
-                                  ),
+                                  )),
                                 ),
                                 Positioned(
                                   bottom: 8,
@@ -282,8 +288,21 @@ class Profile extends State<MyProfilePage> {
                 ),
               ),
               Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
+                height: 40,
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: ElevatedButton(
+                  child: const Text('Save Info'),
+                  style: ElevatedButton.styleFrom(primary: Colors.blue),
+                  onPressed: () {
+                    print("Saved");
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(130, 40, 130, 60),
+                height: 40,
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 child: ElevatedButton(
                   child: const Text('Log Out'),
                   style: ElevatedButton.styleFrom(primary: Colors.red),
@@ -292,8 +311,14 @@ class Profile extends State<MyProfilePage> {
                         .collection("users")
                         .doc(user.uid)
                         .set(UserMaps.profileMap(_faculty, _year, _activities));
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignIn()));
+                    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return SignIn();
+                        },
+                      ),
+                          (_) => false,
+                    );
                   },
                 ),
               ),
