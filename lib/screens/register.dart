@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/authentication/fire_auth.dart';
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/screens/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
@@ -14,11 +15,12 @@ class Register extends StatelessWidget {
   final TextEditingController _password1Controller = TextEditingController();
   final TextEditingController _password2Controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.amber[50],
+      backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -105,6 +107,18 @@ class Register extends StatelessWidget {
                         password: _password1Controller.text,
                       );
                       if (user != null) {
+                        //add user into Cloud Firestore
+                        CollectionReference users = db.collection('users');
+                        users
+                            .doc(user.uid)
+                            .set({
+                              "userid": user.uid,
+                              "Name": _nameController.text,
+                              "Email": _emailController.text,
+                            })
+                            .then((value) => print('User added'))
+                            .catchError((error) =>
+                                print('Failed to add user : $error'));
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => LogIn()),
                         );
