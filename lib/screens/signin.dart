@@ -1,3 +1,4 @@
+import 'package:close_contact/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/authentication/fire_auth.dart';
@@ -94,7 +95,7 @@ class SignIn extends StatelessWidget {
                           await user.sendEmailVerification();
                         } else {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => Home(user)),
+                            MaterialPageRoute(builder: (context) => BotNavBar(user)),
                           );
                         }
                       }

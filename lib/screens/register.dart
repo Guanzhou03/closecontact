@@ -111,7 +111,10 @@ class Register extends StatelessWidget {
                         //add user into Cloud Firestore
                         CollectionReference users = db.collection('users');
                         users
-                            .add({
+                            .doc(user.uid)
+                            .set({
+                              "userid": user.uid,
+
                               "Name": _nameController.text,
                               "Email": _emailController.text,
                             })
