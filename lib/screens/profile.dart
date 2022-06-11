@@ -23,8 +23,6 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class Profile extends State<MyProfilePage> {
-  List? _myActivities;
-  late String _myActivitiesResult;
   final _formKey = new GlobalKey<FormState>();
   String _faculty = "";
   String _year = "";
@@ -35,24 +33,20 @@ class Profile extends State<MyProfilePage> {
   TextEditingController _bioController =
       TextEditingController(text: InfoGetter.bioGetter(user: user));
   TextEditingController _facultyController =
-      TextEditingController(text: "Faculty Controller");
+      TextEditingController();
   TextEditingController _yearController =
-      TextEditingController(text: "Year Controller");
+      TextEditingController(text: "Please choose your year of study");
 
   @override
   void initState() {
     super.initState();
-    _myActivities = [];
-    _myActivitiesResult = '';
+    _facultyController.text = "Please choose a faculty";
   }
 
   _saveForm() {
     var form = _formKey.currentState!;
     if (form.validate()) {
       form.save();
-      setState(() {
-        _myActivitiesResult = _myActivities.toString();
-      });
     }
   }
 
@@ -226,7 +220,7 @@ class Profile extends State<MyProfilePage> {
                       borderRadius: BorderRadius.all(Radius.circular(12.0))),
                   validator: (value) {
                     if (value == null || value.length == 0) {
-                      return 'Please select one or more options';
+                      return 'Please select your interests';
                     }
                     return null;
                   },
@@ -264,14 +258,9 @@ class Profile extends State<MyProfilePage> {
                   valueField: 'value',
                   okButtonLabel: 'OK',
                   cancelButtonLabel: 'CANCEL',
-                  hintWidget: Text('Please choose one or more'),
-                  initialValue: _myActivities,
+                  hintWidget: Text('Please select your interests'),
                   onSaved: (value) {
                     if (value == null) return;
-                    setState(() {
-                      _myActivities = value;
-                      _activities = value.toString();
-                    });
                   },
                 ),
               ),
@@ -283,12 +272,8 @@ class Profile extends State<MyProfilePage> {
               //   ),
               // ),
               Container(
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
-                child: Text(_myActivitiesResult),
-              ),
-              Container(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
                   child: const Text(
                     'Faculty/Course of study ',
                     style: TextStyle(fontSize: 14),
@@ -300,6 +285,7 @@ class Profile extends State<MyProfilePage> {
                   validator: (value) => Validator.validateFaculty(value),
                   decoration: InputDecoration(
                       suffixIcon: DropdownButtonFormField(
+                        hint: Text(_facultyController.text),
                         items: <String>['Computing', 'Fac2', 'Fac3', 'Fac4']
                             .map((String value) {
                           return DropdownMenuItem<String>(
@@ -312,9 +298,7 @@ class Profile extends State<MyProfilePage> {
                         },
                       ),
                       contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      border: OutlineInputBorder(),
-                      labelText: "Fac",
-                      labelStyle: TextStyle(fontSize: 13)),
+                      border: OutlineInputBorder()),
                 ),
               ),
               Container(
@@ -334,6 +318,9 @@ class Profile extends State<MyProfilePage> {
                   validator: (value) => Validator.validateYear(value),
                   decoration: InputDecoration(
                       suffixIcon: DropdownButtonFormField(
+                        hint: Text(_yearController.text,
+                            style: TextStyle(fontWeight: FontWeight.bold,
+                            fontSize: 14)),
                         items: <String>[
                           'Year 1',
                           'Year 2',
@@ -351,9 +338,7 @@ class Profile extends State<MyProfilePage> {
                         },
                       ),
                       contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      border: OutlineInputBorder(),
-                      labelText: "Year of study",
-                      labelStyle: TextStyle(fontSize: 13)),
+                      border: OutlineInputBorder()),
                 ),
               ),
               Container(
