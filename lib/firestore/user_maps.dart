@@ -9,11 +9,12 @@ class UserMaps {
   }
 
   static Map<String, dynamic> profileMap(
-      String faculty, String year, String activities) {
+      String faculty, String year, String activities, String bio) {
     return {
       "faculty": faculty,
       "year": year,
       "activities": activities,
+      "bio": bio,
     };
   }
 }

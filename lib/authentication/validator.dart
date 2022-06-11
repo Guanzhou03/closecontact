@@ -52,4 +52,28 @@ class Validator {
 
     return null;
   }
+
+  static String? validateBio({required String? bio}) {
+    if (bio == null) {
+      return null;
+    }
+    if (bio.isEmpty) {
+      return "Bio can\'t be empty";
+    }
+    return null;
+  }
+
+  static String? validateFaculty(String? faculty) {
+    if (faculty == null) {
+      return "Please select your faculty!";
+    }
+    return null;
+  }
+
+  static String? validateYear(String? year) {
+    if (year == null) {
+      return "Please select your year!";
+    }
+    return null;
+  }
 }
