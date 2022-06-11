@@ -28,17 +28,18 @@ class Register extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text(
-                    'Close Contact',
-                    style: TextStyle(
-                        color: Colors.brown,
-                        fontFamily: 'Murray Hill',
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 60),
-                  )),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: const Text(
+                  'Close Contact',
+                  style: TextStyle(
+                      color: Colors.brown,
+                      fontFamily: 'Murray Hill',
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 60),
+                ),
+              ),
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
@@ -113,6 +114,7 @@ class Register extends StatelessWidget {
                             .doc(user.uid)
                             .set({
                               "userid": user.uid,
+
                               "Name": _nameController.text,
                               "Email": _emailController.text,
                             })
