@@ -204,6 +204,7 @@ class Profile extends State<MyProfilePage> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return TextFormField(
+                        maxLines: null,
                         controller: _bioController,
                         validator: (value) => Validator.validateBio(bio: value),
                         decoration: const InputDecoration(
