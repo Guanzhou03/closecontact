@@ -30,16 +30,25 @@ class Profile extends State<MyProfilePage> {
 
   Profile();
   static final user = FirebaseAuth.instance.currentUser;
-  TextEditingController _bioController =
-      TextEditingController(text: InfoGetter.bioGetter(user: user));
-  TextEditingController _facultyController =
-      TextEditingController();
+
+  Future<void> setControllers() async {
+    var bio = await InfoGetter.bioGetter(user: user);
+    _bioController = await TextEditingController(text: bio);
+    var faculty = await InfoGetter.facultyGetter(user: user);
+    _facultyController = await TextEditingController(text: faculty);
+    var year = await InfoGetter.yearGetter(user: user);
+    _yearController = await TextEditingController(text: year);
+  }
+
+  TextEditingController _bioController = TextEditingController();
+  TextEditingController _facultyController = TextEditingController();
   TextEditingController _yearController =
       TextEditingController(text: "Please choose your year of study");
 
   @override
   void initState() {
     super.initState();
+    setControllers();
     _facultyController.text = "Please choose a faculty";
   }
 
@@ -65,7 +74,7 @@ class Profile extends State<MyProfilePage> {
   static const String _title = 'Profile Screen';
   final List<String> testList = ['1', '2', '3', '4', '5'];
   var sportsTapped = false;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  static FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -190,17 +199,27 @@ class Profile extends State<MyProfilePage> {
                   )),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: TextFormField(
-                  controller: _bioController,
-                  validator: (value) => Validator.validateBio(bio: value),
-                  decoration: const InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    border: OutlineInputBorder(),
-                    // labelText: "Add a bio",
-                    // labelStyle: TextStyle(fontSize: 13),
-                  ),
+                child: FutureBuilder(
+                  future: setControllers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return TextFormField(
+                        controller: _bioController,
+                        validator: (value) => Validator.validateBio(bio: value),
+                        decoration: const InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          border: OutlineInputBorder(),
+                          // labelText: "Add a bio",
+                          // labelStyle: TextStyle(fontSize: 13),
+                        ),
+                      );
+                    }
+                    return Text("Loading");
+                  },
                 ),
               ),
+
               Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -280,25 +299,39 @@ class Profile extends State<MyProfilePage> {
                   )),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: TextFormField(
-                  controller: _facultyController,
-                  validator: (value) => Validator.validateFaculty(value),
-                  decoration: InputDecoration(
-                      suffixIcon: DropdownButtonFormField(
-                        hint: Text(_facultyController.text),
-                        items: <String>['Computing', 'Fac2', 'Fac3', 'Fac4']
-                            .map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value, textAlign: TextAlign.right),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          _faculty = value as String;
-                        },
-                      ),
-                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      border: OutlineInputBorder()),
+                child: FutureBuilder(
+                  future: setControllers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return TextFormField(
+                        controller: _facultyController,
+                        validator: (value) => Validator.validateFaculty(value),
+                        decoration: InputDecoration(
+                            suffixIcon: DropdownButtonFormField(
+                              hint: Text(_facultyController.text),
+                              items: <String>[
+                                'Computing',
+                                'Fac2',
+                                'Fac3',
+                                'Fac4'
+                              ].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child:
+                                      Text(value, textAlign: TextAlign.right),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                _faculty = value as String;
+                              },
+                            ),
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            border: OutlineInputBorder()),
+                      );
+                    }
+                    return Text("Loading");
+                  },
                 ),
               ),
               Container(
@@ -313,32 +346,43 @@ class Profile extends State<MyProfilePage> {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: TextFormField(
-                  controller: _yearController,
-                  validator: (value) => Validator.validateYear(value),
-                  decoration: InputDecoration(
-                      suffixIcon: DropdownButtonFormField(
-                        hint: Text(_yearController.text,
-                            style: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 14)),
-                        items: <String>[
-                          'Year 1',
-                          'Year 2',
-                          'Year 3',
-                          'Year 4',
-                          'Year 5'
-                        ].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value, textAlign: TextAlign.right),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          _year = value as String;
-                        },
-                      ),
-                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      border: OutlineInputBorder()),
+                child: FutureBuilder(
+                  future: setControllers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return TextFormField(
+                        controller: _yearController,
+                        validator: (value) => Validator.validateYear(value),
+                        decoration: InputDecoration(
+                            suffixIcon: DropdownButtonFormField(
+                              hint: Text(_yearController.text,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              items: <String>[
+                                'Year 1',
+                                'Year 2',
+                                'Year 3',
+                                'Year 4',
+                                'Year 5'
+                              ].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child:
+                                      Text(value, textAlign: TextAlign.right),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                _year = value as String;
+                              },
+                            ),
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            border: OutlineInputBorder()),
+                      );
+                    }
+                    return Text("Loading");
+                  },
                 ),
               ),
               Container(
