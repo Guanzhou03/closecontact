@@ -19,7 +19,7 @@ class MyProfilePage extends StatefulWidget {
   MyProfilePage(this.user, {Key? key}) : super(key: key);
 
   @override
-  State<MyProfilePage> createState() => Profile();
+  State<MyProfilePage> createState() => Profile(user);
 }
 
 class Profile extends State<MyProfilePage> {
@@ -28,10 +28,11 @@ class Profile extends State<MyProfilePage> {
   String _year = "";
   String _activities = "";
 
-  Profile();
-  static final user = FirebaseAuth.instance.currentUser;
+  Profile(this.user);
+  User user;
 
   Future<void> setControllers() async {
+    print(user.uid);
     var bio = await InfoGetter.bioGetter(user: user);
     _bioController = await TextEditingController(text: bio);
     var faculty = await InfoGetter.facultyGetter(user: user);
@@ -394,7 +395,7 @@ class Profile extends State<MyProfilePage> {
                   style: ElevatedButton.styleFrom(primary: Colors.blue),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      db.collection("users").doc(user?.uid).update(
+                      db.collection("users").doc(user.uid).update(
                             UserMaps.profileMap(
                               _faculty,
                               _year,
@@ -414,6 +415,7 @@ class Profile extends State<MyProfilePage> {
                   child: const Text('Log Out'),
                   style: ElevatedButton.styleFrom(primary: Colors.red),
                   onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
                     Navigator.of(context, rootNavigator: true)
                         .pushAndRemoveUntil(
                       MaterialPageRoute(

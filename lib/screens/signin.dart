@@ -95,7 +95,8 @@ class SignIn extends StatelessWidget {
                           await user.sendEmailVerification();
                         } else {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => BotNavBar(user)),
+                            MaterialPageRoute(
+                                builder: (context) => BotNavBar(user)),
                           );
                         }
                       }
