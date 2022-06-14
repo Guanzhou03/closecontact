@@ -43,6 +43,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   persistent_bottom_nav_bar_v2: ^4.2.3
   cloud_firestore: ^3.1.17
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

@@ -102,28 +102,43 @@ class Register extends StatelessWidget {
                   child: const Text('Register'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      User? user = await FireAuth.registerUsingEmailPassword(
-                        name: _nameController.text,
-                        email: _emailController.text,
-                        password: _password1Controller.text,
-                      );
-                      if (user != null) {
-                        //add user into Cloud Firestore
-                        CollectionReference users = db.collection('users');
-                        users
-                            .doc(user.uid)
-                            .set({
-                              "userid": user.uid,
-
-                              "Name": _nameController.text,
-                              "Email": _emailController.text,
-                            })
-                            .then((value) => print('User added'))
-                            .catchError((error) =>
-                                print('Failed to add user : $error'));
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => LogIn()),
+                      try {
+                        User? user = await FireAuth.registerUsingEmailPassword(
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          password: _password1Controller.text,
                         );
+                        if (user != null) {
+                          //add user into Cloud Firestore
+                          CollectionReference users = db.collection('users');
+                          users
+                              .doc(user.uid)
+                              .set({
+                            "userid": user.uid,
+
+                            "Name": _nameController.text,
+                            "Email": _emailController.text,
+                          })
+                              .then((value) =>
+                              showDialog(context: context,
+                                  builder: (context) =>
+                                      AlertDialog(content: Text(
+                                          "Email verification sent!")))
+                          )
+                              .catchError((error) =>
+                              showDialog(context: context,
+                                  builder: (context) =>
+                                      AlertDialog(content: Text(
+                                          'Failed to add user : $error'))));
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => LogIn()),
+                          );
+                        }
+                      }
+                      catch(SignUpError) {
+                        showDialog(context: context,
+                            builder: (context) =>
+                                AlertDialog(content: Text('Failed to add user: Account already exists!')));
                       }
                     }
                   },

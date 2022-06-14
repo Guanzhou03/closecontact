@@ -6,7 +6,7 @@ import 'package:close_contact/screens/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/screens/home.dart';
 import 'package:close_contact/screens/chats.dart';
-
+import 'package:close_contact/screens/chats_home.dart';
 
 class BotNavBar extends StatelessWidget {
   User user;
@@ -15,7 +15,7 @@ class BotNavBar extends StatelessWidget {
   List<Widget> _buildScreens() {
     return [
       Home(user),
-      Chats(user),
+      ChatsHome(user),
       MyProfilePage(user)
     ];
   }
