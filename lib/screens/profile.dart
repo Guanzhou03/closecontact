@@ -338,7 +338,7 @@ class Profile extends State<MyProfilePage> {
                               Validator.validateFaculty(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_facultyController.text),
+                                hint: Text(_facultyController.text, style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Computing',
                                   'Fac2',
@@ -378,9 +378,7 @@ class Profile extends State<MyProfilePage> {
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
                                 hint: Text(_yearController.text,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14)),
+                                    style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Year 1',
                                   'Year 2',
