@@ -61,10 +61,7 @@ class InfoGetter {
     await db.collection("users").doc(user.uid).get().then((value) => {
           if (value.exists)
             {
-              print("hi 2"),
-              //print(value.data()!["activities"]),
               _activities = value.data()!["activities"] as String,
-              print("hi 3"),
             }
         });
     return _activities;

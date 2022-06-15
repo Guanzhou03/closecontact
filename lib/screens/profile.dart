@@ -1,6 +1,7 @@
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/widgets/sports_button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,15 +31,8 @@ class Profile extends State<MyProfilePage> {
   String _activityString = "";
   static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
-  List<String> temp = [
-    "Running",
-    "Climbing",
-    "Chess",
-    "Swimming",
-    "Music",
-    "Mahjong",
-    "Football"
-  ];
+
+  String imageUrl = " ";
 
   Profile(this.user);
   User user;
@@ -52,11 +46,15 @@ class Profile extends State<MyProfilePage> {
     var year = await InfoGetter.yearGetter(user: user);
     _yearController.text = year;
     _year = year;
-    //activities retrieved from db: type String
+    imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
     var activities = await InfoGetter.activitiesGetter(user: user);
-    //convert into a List<String>
     _activities =
-        await activities.substring(1, activities.length - 1).split(",");
+        activities.substring(1, activities.length - 1).split(",").map((x) {
+      if (x[0] == " ") {
+        return x.substring(1);
+      }
+      return x;
+    }).toList();
   }
 
   TextEditingController _bioController = TextEditingController();
@@ -80,13 +78,22 @@ class Profile extends State<MyProfilePage> {
 
   File? _image;
 
-  Future getImage() async {
+  Future getUploadImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
     final imageTemp = File(image.path);
-
-    setState(() {
-      this._image = imageTemp;
+    String uid = user.uid;
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("profilepics")
+        .child("$uid" + ".jpg");
+    await ref.putFile(imageTemp);
+    ref.getDownloadURL().then((value) {
+      setState(() {
+        this._image = imageTemp;
+        imageUrl = value;
+        print(imageUrl);
+      });
     });
   }
 
@@ -130,7 +137,9 @@ class Profile extends State<MyProfilePage> {
                       ),
                       Stack(alignment: Alignment.center, children: [
                         UserProfileAvatar(
-                          avatarUrl: 'https://picsum.photos/id/237/5000/5000',
+                          avatarUrl: imageUrl == " "
+                              ? 'https://picsum.photos/id/237/5000/5000'
+                              : imageUrl,
                           onAvatarTap: () {
                             print("tapped");
                           },
@@ -171,7 +180,7 @@ class Profile extends State<MyProfilePage> {
                                               ),
                                             ]),
                                         child: ElevatedButton(
-                                          onPressed: () => getImage(),
+                                          onPressed: () => getUploadImage(),
                                           style: ElevatedButton.styleFrom(
                                               primary: Colors.redAccent,
                                               shape: CircleBorder()),
@@ -204,7 +213,8 @@ class Profile extends State<MyProfilePage> {
                                               child: ElevatedButton(
                                                   child: Icon(Icons.add,
                                                       color: Colors.grey),
-                                                  onPressed: () => {getImage()},
+                                                  onPressed: () =>
+                                                      {getUploadImage()},
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                           primary: Colors.white,
@@ -251,9 +261,7 @@ class Profile extends State<MyProfilePage> {
                             borderRadius: BorderRadius.circular(1.0)),
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: MultiSelectFormField(
-                          //activities retrieved from db, but buggy
-                          //When replaced with temp(hardcoded), it works
-                          initialValue: temp,
+                          initialValue: _activities,
                           fillColor: Colors.amber[50],
                           title: Text("My Interests"),
                           autovalidate: AutovalidateMode.disabled,
@@ -338,7 +346,8 @@ class Profile extends State<MyProfilePage> {
                               Validator.validateFaculty(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_facultyController.text, style: TextStyle(color: Colors.black)),
+                                hint: Text(_facultyController.text,
+                                    style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Computing',
                                   'Fac2',
@@ -419,6 +428,8 @@ class Profile extends State<MyProfilePage> {
                                       _bioController.text,
                                     ),
                                   );
+                              user.updatePhotoURL(imageUrl);
+                              print(user.photoURL);
                             }
                           },
                         ),
