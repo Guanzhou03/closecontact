@@ -52,18 +52,19 @@ class InfoGetter {
     return _year;
   }
 
-  static Future<List<String>> activitiesGetter({required User? user}) async {
+  static Future<String> activitiesGetter({required User? user}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    List<String> _activities = ["Please choose your year of study"];
+    String _activities = "";
     if (user == null) {
       return Future(() => _activities);
     }
-
     await db.collection("users").doc(user.uid).get().then((value) => {
           if (value.exists)
             {
-              _activities =
-                  value.data()!["activities"].map((x) => x.toString()),
+              print("hi 2"),
+              //print(value.data()!["activities"]),
+              _activities = value.data()!["activities"] as String,
+              print("hi 3"),
             }
         });
     return _activities;

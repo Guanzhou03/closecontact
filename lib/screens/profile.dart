@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:close_contact/widgets/bottom_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:close_contact/firestore/user_maps.dart';
+import 'package:collection/collection.dart';
 
 class MyProfilePage extends StatefulWidget {
   User user;
@@ -26,8 +27,18 @@ class Profile extends State<MyProfilePage> {
   final _formKey = new GlobalKey<FormState>();
   String _faculty = "";
   String _year = "";
-  List<String> _activities = [""];
+  String _activityString = "";
+  static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
+  List<String> temp = [
+    "Running",
+    "Climbing",
+    "Chess",
+    "Swimming",
+    "Music",
+    "Mahjong",
+    "Football"
+  ];
 
   Profile(this.user);
   User user;
@@ -39,8 +50,11 @@ class Profile extends State<MyProfilePage> {
     _facultyController.text = faculty;
     var year = await InfoGetter.yearGetter(user: user);
     _yearController.text = year;
+    //activities retrieved from db: type String
     var activities = await InfoGetter.activitiesGetter(user: user);
-    _activities = activities;
+    //convert into a List<String>
+    _activities =
+        await activities.substring(1, activities.length - 1).split(",");
   }
 
   TextEditingController _bioController = TextEditingController();
@@ -235,7 +249,9 @@ class Profile extends State<MyProfilePage> {
                             borderRadius: BorderRadius.circular(1.0)),
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: MultiSelectFormField(
-                          initialValue: ["Chess", "Swimming"],
+                          //activities retrieved from db, but buggy
+                          //When replaced with temp(hardcoded), it works
+                          initialValue: temp,
                           fillColor: Colors.amber[50],
                           title: Text("My Interests"),
                           autovalidate: AutovalidateMode.disabled,
@@ -291,9 +307,8 @@ class Profile extends State<MyProfilePage> {
                           cancelButtonLabel: 'CANCEL',
                           hintWidget: Text('Please select your interests'),
                           onSaved: (value) {
-                            print(value);
-                            _activities = [value.toString()];
-                            print(_activities);
+                            _activityString = value.toString();
+                            print(_activityString);
                             if (value == null) return;
                           },
                         ),
@@ -400,7 +415,7 @@ class Profile extends State<MyProfilePage> {
                                     UserMaps.profileMap(
                                       _faculty,
                                       _year,
-                                      _activities,
+                                      _activityString,
                                       _bioController.text,
                                     ),
                                   );
