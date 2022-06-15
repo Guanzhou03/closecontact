@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FireAuth {
   static Future<User?> registerUsingEmailPassword({
@@ -25,7 +27,7 @@ class FireAuth {
         }
       } else if (e.code == 'email-already-in-use') {
         if (kDebugMode) {
-          print('The account already exists for that email.');
+          Get.dialog(SimpleDialog(title: Text("Error")));
         }
       }
     } catch (e) {
