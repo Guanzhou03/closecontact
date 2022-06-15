@@ -48,8 +48,10 @@ class Profile extends State<MyProfilePage> {
     _bioController.text = bio;
     var faculty = await InfoGetter.facultyGetter(user: user);
     _facultyController.text = faculty;
+    _faculty = faculty;
     var year = await InfoGetter.yearGetter(user: user);
     _yearController.text = year;
+    _year = year;
     //activities retrieved from db: type String
     var activities = await InfoGetter.activitiesGetter(user: user);
     //convert into a List<String>
