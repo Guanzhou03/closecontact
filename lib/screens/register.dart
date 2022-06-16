@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   static const String _title = 'Register Screen';
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -20,6 +20,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -120,13 +121,13 @@ class Register extends StatelessWidget {
                             "Email": _emailController.text,
                           })
                               .then((value) =>
-                              showDialog(context: context,
+                              showDialog(context: _scaffoldKey.currentContext!,
                                   builder: (context) =>
                                       AlertDialog(content: Text(
                                           "Email verification sent!")))
                           )
                               .catchError((error) =>
-                              showDialog(context: context,
+                              showDialog(context: _scaffoldKey.currentContext!,
                                   builder: (context) =>
                                       AlertDialog(content: Text(
                                           'Failed to add user : $error'))));
@@ -136,8 +137,8 @@ class Register extends StatelessWidget {
                         }
                       }
                       catch(SignUpError) {
-                        showDialog(context: context,
-                            builder: (context) =>
+                        showDialog(context: _scaffoldKey.currentContext!,
+                            builder: (dialogContext) =>
                                 AlertDialog(content: Text('Failed to add user: Account already exists!')));
                       }
                     }
