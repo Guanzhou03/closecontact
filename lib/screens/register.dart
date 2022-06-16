@@ -110,11 +110,13 @@ class Register extends StatelessWidget {
                           password: _password1Controller.text,
                         );
                         if (user != null) {
+                          await user.sendEmailVerification();
                           //add user into Cloud Firestore
                           CollectionReference users = db.collection('users');
                           users
                               .doc(user.uid)
                               .set({
+
                             "userid": user.uid,
 
                             "Name": _nameController.text,
@@ -130,6 +132,7 @@ class Register extends StatelessWidget {
                               showDialog(context: _scaffoldKey.currentContext!,
                                   builder: (context) =>
                                       AlertDialog(content: Text(
+
                                           'Failed to add user : $error'))));
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => LogIn()),
@@ -140,6 +143,7 @@ class Register extends StatelessWidget {
                         showDialog(context: _scaffoldKey.currentContext!,
                             builder: (dialogContext) =>
                                 AlertDialog(content: Text('Failed to add user: Account already exists!')));
+
                       }
                     }
                   },
