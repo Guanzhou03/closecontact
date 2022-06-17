@@ -1,3 +1,4 @@
+import 'package:close_contact/screens/chat_requests.dart';
 import 'package:close_contact/widgets/category_selector.dart';
 import 'package:close_contact/widgets/recent_chats.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,11 @@ class ChatsHome extends StatelessWidget {
               Text("Chats",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(primary: Colors.grey),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => ChatRequest(this.user)),
+                  );
+                },
                 icon: new Stack(
                   children: <Widget>[
                     new Icon(Icons.notifications),

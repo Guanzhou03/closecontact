@@ -66,7 +66,7 @@ class ForgetPassword extends StatelessWidget {
                 try {
                   await FirebaseAuth.instance.sendPasswordResetEmail(
                       email: _emailController.text.trim());
-                  Navigator.of(context).pop();
+                  Navigator.of(context, rootNavigator: true).pop();
                 } catch (e) {
                   print(e);
                   showDialog(
@@ -76,7 +76,6 @@ class ForgetPassword extends StatelessWidget {
                     ),
                   );
                 }
-
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(

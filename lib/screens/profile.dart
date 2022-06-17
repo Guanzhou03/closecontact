@@ -241,6 +241,7 @@ class Profile extends State<MyProfilePage> {
                       Container(
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         child: TextFormField(
+                          maxLength: 100,
                           maxLines: null,
                           controller: _bioController,
                           validator: (value) =>
