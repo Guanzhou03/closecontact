@@ -1,3 +1,4 @@
+import 'package:close_contact/screens/forget_password.dart';
 import 'package:close_contact/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +73,9 @@ class SignIn extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  //forgot password screen
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ForgetPassword()),
+                  );
                 },
                 child: const Text(
                   'Forgot Password',
@@ -90,12 +93,15 @@ class SignIn extends StatelessWidget {
                         password: _passwordController.text,
                       );
                       if (user != null) {
-                        if (!user.emailVerified) {
+                        // disabled email verification for now,
+                        // if (!user.emailVerified) {
+                        if (false) {
                           showAlertDialog(context);
                           await user.sendEmailVerification();
                         } else {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => BotNavBar(user)),
+                            MaterialPageRoute(
+                                builder: (context) => BotNavBar(user)),
                           );
                         }
                       }

@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   static const String _title = 'Register Screen';
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -20,6 +20,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.amber[50],
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -102,28 +103,47 @@ class Register extends StatelessWidget {
                   child: const Text('Register'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      User? user = await FireAuth.registerUsingEmailPassword(
-                        name: _nameController.text,
-                        email: _emailController.text,
-                        password: _password1Controller.text,
-                      );
-                      if (user != null) {
-                        //add user into Cloud Firestore
-                        CollectionReference users = db.collection('users');
-                        users
-                            .doc(user.uid)
-                            .set({
-                              "userid": user.uid,
-
-                              "Name": _nameController.text,
-                              "Email": _emailController.text,
-                            })
-                            .then((value) => print('User added'))
-                            .catchError((error) =>
-                                print('Failed to add user : $error'));
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => LogIn()),
+                      try {
+                        User? user = await FireAuth.registerUsingEmailPassword(
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          password: _password1Controller.text,
                         );
+                        if (user != null) {
+                          await user.sendEmailVerification();
+                          //add user into Cloud Firestore
+                          CollectionReference users = db.collection('users');
+                          users
+                              .doc(user.uid)
+                              .set({
+
+                            "userid": user.uid,
+
+                            "Name": _nameController.text,
+                            "Email": _emailController.text,
+                          })
+                              .then((value) =>
+                              showDialog(context: _scaffoldKey.currentContext!,
+                                  builder: (context) =>
+                                      AlertDialog(content: Text(
+                                          "Email verification sent!")))
+                          )
+                              .catchError((error) =>
+                              showDialog(context: _scaffoldKey.currentContext!,
+                                  builder: (context) =>
+                                      AlertDialog(content: Text(
+
+                                          'Failed to add user : $error'))));
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => LogIn()),
+                          );
+                        }
+                      }
+                      catch(SignUpError) {
+                        showDialog(context: _scaffoldKey.currentContext!,
+                            builder: (dialogContext) =>
+                                AlertDialog(content: Text('Failed to add user: Account already exists!')));
+
                       }
                     }
                   },
