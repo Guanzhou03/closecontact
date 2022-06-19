@@ -1,7 +1,10 @@
 import 'dart:ffi';
 
+import 'package:close_contact/screens/profile.dart';
+import 'package:close_contact/widgets/profile_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class InfoGetter {
   static Future<String> bioGetter({required User? user}) async {
@@ -14,7 +17,7 @@ class InfoGetter {
     await db.collection("users").doc(user.uid).get().then((value) => {
           if (value.exists)
             {
-              _bio = value.data()!["bio"] as String,
+              _bio = value.data()?["bio"] as String,
             }
         });
     return _bio;
@@ -65,5 +68,40 @@ class InfoGetter {
             }
         });
     return _activities;
+  }
+
+  static Future<List<Profile>> cardStackCreator({required user}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var temp = await db
+        .collection("users")
+        .orderBy("Name")
+        .orderBy("activities")
+        .orderBy("imageURL")
+        .limit(4)
+        .get()
+        .then((value) => value.docs)
+        .then((value) => value.map((e) => e.data()));
+    var result = await temp.map((e) {
+      var uid = e["userid"];
+      var name = e["Name"];
+      var interests = e["activities"];
+      var imageURL = e["imageURL"];
+      late String photoURL;
+      if (imageURL == null) {
+        photoURL = 'https://picsum.photos/id/237/5000/5000';
+      } else {
+        photoURL = imageURL;
+      }
+      try {
+        print("photo is: " + photoURL);
+        return Profile(name: name, interests: interests, imageURL: photoURL);
+      } catch (e) {
+        return Profile(
+            name: name,
+            interests: 'ERROR',
+            imageURL: 'https://picsum.photos/id/237/5000/5000');
+      }
+    }).toList();
+    return result;
   }
 }

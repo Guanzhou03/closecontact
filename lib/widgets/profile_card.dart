@@ -4,11 +4,11 @@ class Profile {
   const Profile({
     required this.name,
     required this.interests,
-    required this.imageAsset,
+    required this.imageURL,
   });
   final String name;
   final String interests;
-  final String imageAsset;
+  final String imageURL;
 }
 
 class ProfileCard extends StatelessWidget {
@@ -26,10 +26,7 @@ class ProfileCard extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                profile.imageAsset,
-                  fit:BoxFit.fitHeight
-              ),
+              child: Image.network(profile.imageURL, fit: BoxFit.fitHeight),
             ),
           ),
           Positioned(
