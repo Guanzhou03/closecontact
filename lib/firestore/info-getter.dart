@@ -5,6 +5,7 @@ import 'package:close_contact/widgets/profile_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:collection/collection.dart';
 
 class InfoGetter {
   static Future<String> bioGetter({required User? user}) async {
@@ -77,7 +78,6 @@ class InfoGetter {
         .orderBy("Name")
         .orderBy("activities")
         .orderBy("imageURL")
-        .limit(4)
         .get()
         .then((value) => value.docs)
         .then((value) => value.map((e) => e.data()));
@@ -87,6 +87,7 @@ class InfoGetter {
       var interests = e["activities"];
       var imageURL = e["imageURL"];
       late String photoURL;
+      if (uid == user.uid) return null;
       if (imageURL == null) {
         photoURL = 'https://picsum.photos/id/237/5000/5000';
       } else {
@@ -102,6 +103,6 @@ class InfoGetter {
             imageURL: 'https://picsum.photos/id/237/5000/5000');
       }
     }).toList();
-    return result;
+    return result.whereNotNull().toList();
   }
 }

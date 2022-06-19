@@ -16,8 +16,9 @@ class CardsStackWidget extends StatefulWidget {
 
 class _CardsStackWidgetState extends State<CardsStackWidget>
     with SingleTickerProviderStateMixin {
+  static FirebaseAuth auth = FirebaseAuth.instance;
   static final FirebaseFirestore db = FirebaseFirestore.instance;
-  static final user = FirebaseAuth.instance.currentUser;
+  static User? _user = FirebaseAuth.instance.currentUser;
   static List<Profile> draggableItems = [];
   Future<void> _future = Future(() {});
   // [
@@ -39,19 +40,22 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   late final AnimationController _animationController;
 
   static Future<void> loadProfiles() async {
-    var temp = await InfoGetter.cardStackCreator(user: user);
+    print(_user?.displayName);
+    await auth.authStateChanges().listen((User? user) {
+      _user = user;
+    });
+    var temp = await InfoGetter.cardStackCreator(user: _user);
     draggableItems = temp;
-
     print(draggableItems.length.toString() + "profiles loaded");
   }
 
   static Future<void> removeLast() async {
-    if (draggableItems.length == 2) {
-      var temp = await InfoGetter.cardStackCreator(user: user);
-      draggableItems.addAll(temp);
-    } else {
-      draggableItems.removeLast();
-    }
+    // if (draggableItems.length == 2) {
+    //   var temp = await InfoGetter.cardStackCreator(user: user);
+    //   draggableItems.addAll(temp);
+    // } else {
+    draggableItems.removeLast();
+    //}
   }
 
   @override
