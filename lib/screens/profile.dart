@@ -21,10 +21,10 @@ class MyProfilePage extends StatefulWidget {
   MyProfilePage(this.user, {Key? key}) : super(key: key);
 
   @override
-  State<MyProfilePage> createState() => Profile(user);
+  State<MyProfilePage> createState() => ProfilePageState(user);
 }
 
-class Profile extends State<MyProfilePage> {
+class ProfilePageState extends State<MyProfilePage> {
   final _formKey = new GlobalKey<FormState>();
   String _faculty = "";
   String _year = "";
@@ -34,7 +34,7 @@ class Profile extends State<MyProfilePage> {
 
   String imageUrl = " ";
 
-  Profile(this.user);
+  ProfilePageState(this.user);
   User user;
 
   Future<void> setControllers() async {
@@ -48,6 +48,7 @@ class Profile extends State<MyProfilePage> {
     _year = year;
     imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
     var activities = await InfoGetter.activitiesGetter(userID: user.uid);
+    _activityString = activities;
     _activities =
         activities.substring(1, activities.length - 1).split(",").map((x) {
       if (x[0] == " ") {
@@ -429,6 +430,9 @@ class Profile extends State<MyProfilePage> {
                                       _bioController.text,
                                     ),
                                   );
+                              db.collection("users").doc(user.uid).set(
+                                  {"imageURL": imageUrl},
+                                  SetOptions(merge: true));
                               user.updatePhotoURL(imageUrl);
                               print(user.photoURL);
                             }
