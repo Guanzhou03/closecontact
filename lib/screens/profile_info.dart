@@ -18,10 +18,11 @@ class ProfileInfo extends StatelessWidget{
   Future<void> _future = Future(() {});
   TextEditingController _bioController = TextEditingController();
   TextEditingController _facultyController = TextEditingController();
-  TextEditingController _yearController =
-  TextEditingController(text: "Please choose your year of study");
-  var imageUrl = " ";
+  TextEditingController _yearController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
 
+  var imageUrl = " ";
+  String _name = "";
   Future<void> setControllers() async {
     var bio = await InfoGetter.bioGetter(userID: UID);
     _bioController.text = bio;
@@ -40,6 +41,8 @@ class ProfileInfo extends StatelessWidget{
           }
           return x;
         }).toList();
+    String name = await InfoGetter.nameGetter(userID: UID);
+    _nameController.text = name;
   }
 
   Widget _buildChip(String label) {
@@ -62,12 +65,11 @@ class ProfileInfo extends StatelessWidget{
     );
   }
 
-  List<String> testInterest = ["Running", "Chess", "Climbing", "Mahjong", "Foodie"];
 
   Widget chipList() {
     return Wrap(
         spacing: 3.0,
-        children: testInterest.map((interest) => _buildChip(interest)).toList()
+        children: _activities.map((interest) => _buildChip(interest)).toList()
     );
   }
 
@@ -99,15 +101,15 @@ class ProfileInfo extends StatelessWidget{
               borderWidth: 5.0,
             ),
           ),
-            Text("Name: " + "Test Name" + _year + _faculty),
-            Container(child: Text("Bio: "),padding: EdgeInsets.fromLTRB(0, 20, 320, 0),),
-            Text(_bioController.text),
-            Container(child: Text("Interests: "),padding: EdgeInsets.fromLTRB(0, 50, 290, 0),),
+            Text("Name: " + _nameController.text + ", " + _year + " " + _faculty),
+            Container(child: Text("Bio: ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), padding: EdgeInsets.fromLTRB(0, 20, 320, 0),),
+            Container(child: Text(_bioController.text), padding: EdgeInsets.fromLTRB(0, 0, 190, 0),),
+            Container(child: Text("Interests: ",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),padding: EdgeInsets.fromLTRB(0, 50, 260, 0),),
             ListView.builder(
                 padding: EdgeInsets.only(left: 20),
 // scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: _activities.length,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   return chipList();
                 }

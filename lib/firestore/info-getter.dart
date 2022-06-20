@@ -4,6 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class InfoGetter {
+  static Future<List<String>> currIncoming({required userid}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var result = await db
+        .collection("users")
+        .doc(userid)
+        .collection("requests")
+        .doc("incoming")
+        .get()
+        .then((value) => value.exists ? value.get("incoming") : null);
+    return result == null ? [] : List<String>.from(result);
+  }
+
   static Future<String> bioGetter({required String userID}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String _bio = "Add a bio";
@@ -18,6 +30,22 @@ class InfoGetter {
         });
     return _bio;
   }
+
+  static Future<String> nameGetter({required String userID}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String _name = "name";
+    if (userID == "") {
+      return Future(() => _name);
+    }
+    await db.collection("users").doc(userID).get().then((value) => {
+      if (value.exists)
+        {
+          _name = value.data()!["Name"] as String,
+        }
+    });
+    return _name;
+  }
+
   static Future<String> imageURLGetter({required String userID}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String _imageURL = "";

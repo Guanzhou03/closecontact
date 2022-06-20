@@ -21,10 +21,9 @@ class ChatRequest extends State<ChatRequestPage> {
   final User user;
   ChatRequest(this.user);
   String imageUrl = " ";
-  List<String> requestedUsers = ["user1", "user2", "user3", "user4"];
+  List<String> requestedUIDs = [];
   List<String> requestedNames = [];
   List<String> requestedImages = [];
-  List<String> requestedUID = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   initialize() async {
@@ -34,20 +33,30 @@ class ChatRequest extends State<ChatRequestPage> {
         .get()
         .then((value) => value.docs)
         .then((value) => value.map((e) => e.data()));
-    requestedUsers = temp.map((x) => x["userid"].toString()).toList();
-    requestedNames = temp.map((x) => x["Name"].toString()).toList();
-    requestedImages = temp.map((x) => x["imageURL"].toString()).toList();
-    requestedUID = temp.map((x) => x["userid"].toString()).toList();
+    requestedUIDs = await InfoGetter.currIncoming(userid: user.uid);
+    requestedNames =  await requestedUIDs.map((id) => maptoNames(id).toString()).toList();
+    requestedImages = await requestedUIDs.map((id) => maptoImage(id).toString()).toList();
   }
-
+  maptoNames(id) async {
+    String name = await InfoGetter.nameGetter(userID: id);
+    return name;
+  }
+  maptoImage(id) async {
+    String url = await InfoGetter.imageURLGetter(userID:id);
+    return url;
+  }
+  maptoN(id) async {
+    String name = await InfoGetter.nameGetter(userID: id);
+    return name;
+  }
   void removal(index) {
-    requestedUsers.removeAt(index);
-    requestedUID.removeAt(index);
+    requestedUIDs.removeAt(index);
+    requestedNames.removeAt(index);
     requestedImages.removeAt(index);
   }
 
   Widget chatRequestBuilder(index, context) {
-    var result = requestedNames[index];
+    String result = requestedNames[index];
     return Row(children: [
       Column(children: [
         UserProfileAvatar(
@@ -57,7 +66,7 @@ class ChatRequest extends State<ChatRequestPage> {
           onAvatarTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileInfo(requestedUID[index])),
+              MaterialPageRoute(builder: (context) => ProfileInfo(requestedUIDs[index])),
             );
           },
           avatarSplashColor: Colors.purple,
@@ -76,7 +85,7 @@ class ChatRequest extends State<ChatRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<List<String>> requestedUsersNotifier = ValueNotifier(requestedUsers);
+    ValueNotifier<List<String>> requestedUsersNotifier = ValueNotifier(requestedUIDs);
     key: _scaffoldKey;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -96,19 +105,17 @@ class ChatRequest extends State<ChatRequestPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               return ValueListenableBuilder(valueListenable: requestedUsersNotifier, builder: (context, List<String> currList, child){
                 return ListView.builder(
-                    itemCount: requestedUsers.length,
+                    itemCount: requestedUIDs == null? 0 : requestedUIDs.length,
                     itemBuilder: (context, index) {
-                      return Dismissible(key: Key("$requestedUsers[index]"), child: chatRequestBuilder(index, context),
+                      return Dismissible(key: Key("$requestedUIDs[index]"), child: chatRequestBuilder(index, context),
                           onDismissed: (direction) {
                             if (direction == DismissDirection.startToEnd){
-                              setState((){
                                 removal(index);
-                              });
+                                print("Swiped right");
                             }
                             else {
-                              setState((){
-                                removal(index);
-                              });
+                              removal(index);
+                              print("Swiped left");
                             }
                           });
                     });
