@@ -164,15 +164,5 @@ class InfoGetter {
     return result.whereNotNull().toList();
   }
 
-  static Future<List<String>?> currIncoming({required userid}) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    var result = await db
-        .collection("users")
-        .doc(userid)
-        .collection("requests")
-        .doc("incoming")
-        .get()
-        .then((value) => value.exists ? value.get("incoming") : null);
-    return result == null ? null : List<String>.from(result);
-  }
+
 }
