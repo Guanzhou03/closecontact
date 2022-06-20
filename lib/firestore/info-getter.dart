@@ -128,11 +128,10 @@ class InfoGetter {
     var result = await db
         .collection("users")
         .doc(userid)
-        .collection("incoming")
+        .collection("requests")
         .doc("incoming")
         .get()
-        .then((value) => value.exists ? value.data() : null)
-        .then((value) => value == null ? null : value["incoming"]);
-    return result.map((e) => e.toString()).toList();
+        .then((value) => value.exists ? value.get("incoming") : null);
+    return result == null ? null : List<String>.from(result);
   }
 }

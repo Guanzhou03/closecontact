@@ -234,7 +234,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                       var snapshot = await db
                           .collection("users")
                           .doc(currUserId)
-                          .collection("incoming")
+                          .collection("requests")
                           .doc("incoming");
                       try {
                         List<String>? idList =
