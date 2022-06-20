@@ -48,6 +48,7 @@ class ProfilePageState extends State<MyProfilePage> {
     _year = year;
     imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
     var activities = await InfoGetter.activitiesGetter(user: user);
+    _activityString = activities;
     _activities =
         activities.substring(1, activities.length - 1).split(",").map((x) {
       if (x[0] == " ") {
