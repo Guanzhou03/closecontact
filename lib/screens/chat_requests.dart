@@ -1,3 +1,6 @@
+import 'package:close_contact/screens/chats_home.dart';
+import 'package:close_contact/screens/profile_info.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/widgets/card_stack.dart';
@@ -6,82 +9,119 @@ import 'package:flutter/cupertino.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:close_contact/firestore/info-getter.dart';
 
-class ChatRequest extends StatelessWidget {
-  final User user;
-  ChatRequest(this.user, {Key? key}) : super(key: key);
-  String _faculty = "";
-  String _year = "";
-  String _activityString = "";
-  static List _activities = ["Running"];
-  Future<void> _future = Future(() {});
-  TextEditingController _bioController = TextEditingController();
-  TextEditingController _facultyController = TextEditingController();
-  TextEditingController _yearController =
-  TextEditingController(text: "Please choose your year of study");
-  String imageUrl = " ";
+class ChatRequestPage extends StatefulWidget {
+  User user;
+  ChatRequestPage(this.user, {Key? key}) : super(key: key);
 
-  Future<void> setControllers() async {
-    var bio = await InfoGetter.bioGetter(user: user);
-    _bioController.text = bio;
-    var faculty = await InfoGetter.facultyGetter(user: user);
-    _facultyController.text = faculty;
-    _faculty = faculty;
-    var year = await InfoGetter.yearGetter(user: user);
-    _yearController.text = year;
-    _year = year;
-    imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
-    var activities = await InfoGetter.activitiesGetter(user: user);
-    _activities =
-        activities.substring(1, activities.length - 1).split(",").map((x) {
-          if (x[0] == " ") {
-            return x.substring(1);
-          }
-          return x;
-        }).toList();
+  @override
+  State<ChatRequestPage> createState() => ChatRequest(user);
+}
+
+class ChatRequest extends State<ChatRequestPage> {
+  final User user;
+  ChatRequest(this.user);
+  String imageUrl = " ";
+  List<String> requestedUsers = ["user1", "user2", "user3", "user4"];
+  List<String> requestedNames = [];
+  List<String> requestedImages = [];
+  List<String> requestedUID = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  initialize() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var temp = await db
+        .collection("users")
+        .get()
+        .then((value) => value.docs)
+        .then((value) => value.map((e) => e.data()));
+    requestedUsers = temp.map((x) => x["userid"].toString()).toList();
+    requestedNames = temp.map((x) => x["Name"].toString()).toList();
+    requestedImages = temp.map((x) => x["imageURL"].toString()).toList();
+    requestedUID = temp.map((x) => x["userid"].toString()).toList();
+  }
+
+  void removal(index) {
+    requestedUsers.removeAt(index);
+    requestedUID.removeAt(index);
+    requestedImages.removeAt(index);
+  }
+
+  Widget chatRequestBuilder(index, context) {
+    var result = requestedNames[index];
+    return Row(children: [
+      Column(children: [
+        UserProfileAvatar(
+          avatarUrl: requestedImages[index] == null
+              ? 'https://picsum.photos/id/237/5000/5000'
+              : requestedImages[index],
+          onAvatarTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileInfo(requestedUID[index])),
+            );
+          },
+          avatarSplashColor: Colors.purple,
+          radius: 50,
+          isActivityIndicatorSmall: false,
+          avatarBorderData: AvatarBorderData(
+            borderColor: Colors.white,
+            borderWidth: 5.0,
+          ),
+        ),
+      ]),
+      Text("$result")
+    ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    setControllers();
+    ValueNotifier<List<String>> requestedUsersNotifier = ValueNotifier(requestedUsers);
+    key: _scaffoldKey;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("Chat Requests")),
-      body: Column(
-          children: [
-            Row(children: [
-              Column(children:[
-              UserProfileAvatar(
-                avatarUrl: imageUrl == " "
-                    ? 'https://picsum.photos/id/237/5000/5000'
-                    : imageUrl,
-                onAvatarTap: () {
-                  return AlertDialog(content: Text("HI I AM TOMMY I LOVE TO PLAY MAHJONG AND BADMINTON! JIO ME IF YOU ARE UP FOR EITHER!"));
-                },
-                avatarSplashColor: Colors.purple,
-                radius: 50,
-                isActivityIndicatorSmall: false,
-                avatarBorderData: AvatarBorderData(
-                  borderColor: Colors.white,
-                  borderWidth: 5.0,
-                ),
-              ),
-              Text("Year 1 " + "Computing")]),
-              Flexible(child: Column(
-                  children: [Text("Tommy Goh"),
-                  ListView.builder(
-                      // scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: _activities.length,
-                      itemBuilder: (context, index) {
-                        return Text(_activities[index]);
-                      }
-                      )
-                      ])),
-              IconButton(onPressed: (){}, icon: Icon(Icons.add_circle)),
-              IconButton(onPressed: (){}, icon: Icon(Icons.cancel_outlined))
-            ],
-            ),
-          ]),
+      appBar: AppBar(leading: BackButton(onPressed:() => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatsHome(user)),
+      )),
+          title: const Text("Chat Requests")),
+      body:   FutureBuilder(
+          future: initialize(),
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return ValueListenableBuilder(valueListenable: requestedUsersNotifier, builder: (context, List<String> currList, child){
+                return ListView.builder(
+                    itemCount: requestedUsers.length,
+                    itemBuilder: (context, index) {
+                      return Dismissible(key: Key("$requestedUsers[index]"), child: chatRequestBuilder(index, context),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.startToEnd){
+                              setState((){
+                                removal(index);
+                              });
+                            }
+                            else {
+                              setState((){
+                                removal(index);
+                              });
+                            }
+                          });
+                    });
+
+              }
+              );
+            }
+            else {
+              return Text("Error");
+            }
+          })
+      )
     );
   }
 }
+

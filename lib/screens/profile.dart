@@ -38,16 +38,16 @@ class Profile extends State<MyProfilePage> {
   User user;
 
   Future<void> setControllers() async {
-    var bio = await InfoGetter.bioGetter(user: user);
+    var bio = await InfoGetter.bioGetter(userID: user.uid);
     _bioController.text = bio;
-    var faculty = await InfoGetter.facultyGetter(user: user);
+    var faculty = await InfoGetter.facultyGetter(userID: user.uid);
     _facultyController.text = faculty;
     _faculty = faculty;
-    var year = await InfoGetter.yearGetter(user: user);
+    var year = await InfoGetter.yearGetter(userID: user.uid);
     _yearController.text = year;
     _year = year;
     imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
-    var activities = await InfoGetter.activitiesGetter(user: user);
+    var activities = await InfoGetter.activitiesGetter(userID: user.uid);
     _activities =
         activities.substring(1, activities.length - 1).split(",").map((x) {
       if (x[0] == " ") {

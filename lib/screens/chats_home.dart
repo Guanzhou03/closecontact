@@ -23,7 +23,7 @@ class ChatsHome extends StatelessWidget {
                 style: ElevatedButton.styleFrom(primary: Colors.grey),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ChatRequest(this.user)),
+                    MaterialPageRoute(builder: (context) => ChatRequestPage(this.user)),
                   );
                 },
                 icon: new Stack(
