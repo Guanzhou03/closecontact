@@ -17,4 +17,16 @@ class UserMaps {
       "bio": bio,
     };
   }
+
+  static Map<String, dynamic> incomingRequest(
+      String target, List<String>? curr) {
+    if (curr == null)
+      return {
+        "incoming": [target]
+      };
+    else {
+      curr.add(target);
+      return {"incoming": curr};
+    }
+  }
 }

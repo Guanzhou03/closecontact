@@ -71,7 +71,7 @@ class InfoGetter {
     return _activities;
   }
 
-  static Future<List<Profile>> cardStackCreator({required user}) async {
+  static Future<Iterable<Map<String, dynamic>>> getValidUsers() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     var temp = await db
         .collection("users")
@@ -81,6 +81,11 @@ class InfoGetter {
         .get()
         .then((value) => value.docs)
         .then((value) => value.map((e) => e.data()));
+    return temp;
+  }
+
+  static Future<List<Profile>> cardStackCreator({required user}) async {
+    var temp = await getValidUsers();
     var result = await temp.map((e) {
       var uid = e["userid"];
       var name = e["Name"];
@@ -104,5 +109,30 @@ class InfoGetter {
       }
     }).toList();
     return result.whereNotNull().toList();
+  }
+
+  static Future<List<String>> userIdListGetter({required user}) async {
+    var temp = await getValidUsers();
+    var result = temp.map((e) {
+      var userid = e["userid"];
+      if (user.uid == userid) {
+        return null;
+      }
+      return e["userid"].toString();
+    }).toList();
+    return result.whereNotNull().toList();
+  }
+
+  static Future<List<String>?> currIncoming({required userid}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var result = await db
+        .collection("users")
+        .doc(userid)
+        .collection("incoming")
+        .doc("incoming")
+        .get()
+        .then((value) => value.exists ? value.data() : null)
+        .then((value) => value == null ? null : value["incoming"]);
+    return result.map((e) => e.toString()).toList();
   }
 }

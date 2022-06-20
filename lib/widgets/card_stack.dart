@@ -1,4 +1,5 @@
 import 'package:close_contact/firestore/info-getter.dart';
+import 'package:close_contact/firestore/user_maps.dart';
 import 'package:close_contact/screens/home.dart';
 import 'package:close_contact/widgets/profile_card.dart';
 import 'package:close_contact/widgets/action_button.dart';
@@ -20,6 +21,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static User? _user = FirebaseAuth.instance.currentUser;
   static List<Profile> draggableItems = [];
+  static List<String> userIdList = [];
   Future<void> _future = Future(() {});
   // [
   //   const Profile(
@@ -46,6 +48,8 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
     });
     var temp = await InfoGetter.cardStackCreator(user: _user);
     draggableItems = temp;
+    var temp2 = await InfoGetter.userIdListGetter(user: _user);
+    userIdList = temp2;
     print(draggableItems.length.toString() + "profiles loaded");
   }
 
@@ -202,6 +206,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                     },
                     onAccept: (int index) {
                       setState(() {
+                        print("left");
                         removeLast();
                         //draggableItems.removeAt(index);
                       });
@@ -224,8 +229,29 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                         ),
                       );
                     },
-                    onAccept: (int index) {
+                    onAccept: (int index) async {
+                      var currUserId = userIdList[index];
+                      var snapshot = await db
+                          .collection("users")
+                          .doc(currUserId)
+                          .collection("incoming")
+                          .doc("incoming");
+                      try {
+                        List<String>? idList =
+                            await InfoGetter.currIncoming(userid: currUserId);
+                        if (idList == null) {
+                          snapshot.set({
+                            "incoming": [_user!.uid]
+                          });
+                        } else {
+                          snapshot.set(
+                              UserMaps.incomingRequest(_user!.uid, idList));
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
                       setState(() {
+                        print("right");
                         removeLast();
                         //draggableItems.removeAt(index);
                       });
