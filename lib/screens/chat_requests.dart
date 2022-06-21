@@ -20,11 +20,11 @@ class ChatRequestPage extends StatefulWidget {
 class ChatRequest extends State<ChatRequestPage> {
   final User user;
   ChatRequest(this.user);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String imageUrl = " ";
   List<String> requestedUIDs = [];
   List<String> requestedNames = [];
   List<String> requestedImages = [];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   initialize() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -45,10 +45,7 @@ class ChatRequest extends State<ChatRequestPage> {
     String url = await InfoGetter.imageURLGetter(userID:id);
     return url;
   }
-  maptoN(id) async {
-    String name = await InfoGetter.nameGetter(userID: id);
-    return name;
-  }
+
   void removal(index) {
     requestedUIDs.removeAt(index);
     requestedNames.removeAt(index);

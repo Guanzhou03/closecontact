@@ -1,15 +1,46 @@
+import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/models/message_model.dart';
 import 'package:close_contact/screens/chats.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class RecentChats extends StatelessWidget {
   final User user;
-  RecentChats(this.user, {Key? key}) : super(key: key);
+  List<String> currConversations = []; //list of userIDS that user is talking to
+  RecentChats(this.user, this.currConversations, {Key? key}) : super(key: key);
+  List<String> requestedNames = [];
+  List<String> requestedImages = [];
+
+  initialize() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    requestedNames =  await currConversations.map((id) => maptoNames(id).toString()).toList();
+    requestedImages = await currConversations.map((id) => maptoImage(id).toString()).toList();
+  }
+  maptoNames(id) async {
+    String name = await InfoGetter.nameGetter(userID: id);
+    return name;
+  }
+  maptoImage(id) async {
+    String url = await InfoGetter.imageURLGetter(userID:id);
+    return url;
+    }
 
   @override
   Widget build(BuildContext context) {
+    currConversations.add('jDYEwSEStySyb4DRfBmjGsUnpF63');
+    currConversations.add('JqD1JCk5MZR5gBMxzYHCd66z6po2');
+    currConversations.add('QLVpECCTMAgPAZr1dw0TuxQsljF3');
+    return  FutureBuilder(
+        future: initialize(),
+    builder: ((context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+      child: CircularProgressIndicator(),
+      );
+    }
+    if (snapshot.connectionState == ConnectionState.done) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -25,15 +56,15 @@ class RecentChats extends StatelessWidget {
             topRight: Radius.circular(30.0),
           ),
           child: ListView.builder(
-            itemCount: chats.length,
+            itemCount: 3,
             itemBuilder: (BuildContext context, int index) {
               final Message chat = chats[index];
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => Chats(
-                      user.uid,
+                    builder: (_) => ChattingPage(
+                      user.uid, currConversations[index]
                     ),
                   ),
                 ),
@@ -54,14 +85,14 @@ class RecentChats extends StatelessWidget {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 35.0,
-                            backgroundImage: AssetImage(chat.sender.imageUrl),
+                            backgroundImage: AssetImage(requestedImages[index]),
                           ),
                           SizedBox(width: 10.0),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                chat.sender.name,
+                                requestedNames[index],
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15.0,
@@ -125,6 +156,13 @@ class RecentChats extends StatelessWidget {
           ),
         ),
       ),
+    );
+    }
+    else {
+      return Text("error");
+    }
+  }
+  )
     );
   }
 }

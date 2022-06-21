@@ -3,14 +3,24 @@ import 'package:close_contact/widgets/category_selector.dart';
 import 'package:close_contact/widgets/recent_chats.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../models/message_model.dart';
 
 class ChatsHome extends StatelessWidget {
   final User user;
+  List<String> currConversations = [];
+  void initialMessages() {
+    for (int i = 0; i < 5; i++) {
+      currConversations.add('jDYEwSEStySyb4DRfBmjGsUnpF63');
+      currConversations.add('JqD1JCk5MZR5gBMxzYHCd66z6po2');
+      currConversations.add('QLVpECCTMAgPAZr1dw0TuxQsljF3');
+    }
+  }
   ChatsHome(this.user, {Key? key}) : super(key: key);
   var _counter = 0; //increment this when there is chat request
 
   @override
   Widget build(BuildContext context) {
+    initialMessages();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber[50],
@@ -65,7 +75,7 @@ class ChatsHome extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30.0),
                   topRight: Radius.circular(30.0),
@@ -73,7 +83,7 @@ class ChatsHome extends StatelessWidget {
               ),
               child: Column(
                 children: <Widget>[
-                  RecentChats(this.user), //user we need to retrieve from database
+                  RecentChats(this.user, currConversations), //user we need to retrieve from database
                 ],
               ),
             ),

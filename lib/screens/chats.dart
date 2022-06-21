@@ -2,18 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:close_contact/models/message_model.dart';
+import 'package:user_profile_avatar/user_profile_avatar.dart';
+
+import '../firestore/info-getter.dart';
 //import 'package:close_contact/models/user_model.dart';
 
-class Chats extends StatefulWidget {
-  final String UID;
-
-  Chats(this.UID, {Key? key}) : super(key: key);
+class ChattingPage extends StatefulWidget {
+  String receiverUID;
+  String senderUID;
+  ChattingPage(this.receiverUID, this.senderUID, {Key? key}) : super(key: key);
 
   @override
-  _ChatsState createState() => _ChatsState();
+  _ChatsState createState() => _ChatsState(this.senderUID, this.receiverUID);
 }
 
-class _ChatsState extends State<Chats> {
+class _ChatsState extends State<ChattingPage> {
+  String receiverUID;
+  String senderUID;
+  _ChatsState(this.receiverUID, this.senderUID);
+
+  List<Message> messages = [];
+  var num = 3;
+  void initialMessages() {
+    for (int i = 0; i < 5; i++) {
+      messages.add(Message(
+        senderID: senderUID,
+        time: DateTime.now().toString(),
+        text: "Test message",
+        unread: true
+      ));
+    }
+  }
+  maptoNames(id) async {
+    String name = await InfoGetter.nameGetter(userID: id);
+    return name;
+  }
+  maptoImage(id) async {
+    String url = await InfoGetter.imageURLGetter(userID:id);
+    return url;
+  }
+  
   _buildMessage(Message message, bool isMe) {
     final container = Container(
       margin: isMe
@@ -113,8 +141,21 @@ class _ChatsState extends State<Chats> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
+        leading: UserProfileAvatar(
+          avatarUrl: maptoImage(senderUID),
+          onAvatarTap: () {
+            print("tapped");
+          },
+          avatarSplashColor: Colors.purple,
+          radius: 50,
+          isActivityIndicatorSmall: false,
+          avatarBorderData: AvatarBorderData(
+            borderColor: Colors.white,
+            borderWidth: 5.0,
+          ),
+        ),
         title: Text(
-          "Name 1", //should be the receiver user
+          maptoNames(senderUID), //should be the sender user
           style: TextStyle(
             fontSize: 24.0,
             fontWeight: FontWeight.bold,
@@ -154,7 +195,7 @@ class _ChatsState extends State<Chats> {
                     itemCount: messages.length,
                     itemBuilder: (BuildContext context, int index) {
                       final Message message = messages[index];
-                      final bool isMe = message.sender.id == currentUser.id;
+                      final bool isMe = message.senderID == currentUser.id;
                       return _buildMessage(message, isMe);
                     },
                   ),
