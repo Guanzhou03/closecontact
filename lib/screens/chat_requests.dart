@@ -23,7 +23,9 @@ class ChatRequest extends State<ChatRequestPage> {
   String imageUrl = " ";
   List<String> requestedUIDs = [];
   List<String> requestedNames = [];
+  String currName = "";
   List<String> requestedImages = [];
+  String currImage = "";
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   initialize() async {
@@ -34,21 +36,35 @@ class ChatRequest extends State<ChatRequestPage> {
         .then((value) => value.docs)
         .then((value) => value.map((e) => e.data()));
     requestedUIDs = await InfoGetter.currIncoming(userid: user.uid);
-    requestedNames =  await requestedUIDs.map((id) => maptoNames(id).toString()).toList();
-    requestedImages = await requestedUIDs.map((id) => maptoImage(id).toString()).toList();
+    await currNameSetter(requestedUIDs);
+    await currImageSetter(requestedUIDs);
   }
-  maptoNames(id) async {
+
+  Future<String> maptoNames(id) async {
     String name = await InfoGetter.nameGetter(userID: id);
     return name;
   }
-  maptoImage(id) async {
-    String url = await InfoGetter.imageURLGetter(userID:id);
+
+  Future<void> currNameSetter(List<String> str) async {
+    for (String item in str) {
+      var temp = await maptoNames(item);
+      currName = temp;
+      requestedNames.add(currName);
+    }
+  }
+
+  Future<String> maptoImage(id) async {
+    String url = await InfoGetter.imageURLGetter(userID: id);
     return url;
   }
-  maptoN(id) async {
-    String name = await InfoGetter.nameGetter(userID: id);
-    return name;
+
+  Future<void> currImageSetter(List<String> str) async {
+    for (String item in str) {
+      var temp = await maptoImage(item);
+      requestedImages.add(temp);
+    }
   }
+
   void removal(index) {
     requestedUIDs.removeAt(index);
     requestedNames.removeAt(index);
@@ -57,78 +73,82 @@ class ChatRequest extends State<ChatRequestPage> {
 
   Widget chatRequestBuilder(index, context) {
     String result = requestedNames[index];
-    return Row(children: [
-      Column(children: [
-        UserProfileAvatar(
-          avatarUrl: requestedImages[index] == null
-              ? 'https://picsum.photos/id/237/5000/5000'
-              : requestedImages[index],
-          onAvatarTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileInfo(requestedUIDs[index])),
-            );
-          },
-          avatarSplashColor: Colors.purple,
-          radius: 50,
-          isActivityIndicatorSmall: false,
-          avatarBorderData: AvatarBorderData(
-            borderColor: Colors.white,
-            borderWidth: 5.0,
+    return Row(
+      children: [
+        Column(children: [
+          UserProfileAvatar(
+            avatarUrl: requestedImages[index],
+            onAvatarTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileInfo(requestedUIDs[index])),
+              );
+            },
+            avatarSplashColor: Colors.purple,
+            radius: 50,
+            isActivityIndicatorSmall: false,
+            avatarBorderData: AvatarBorderData(
+              borderColor: Colors.white,
+              borderWidth: 5.0,
+            ),
           ),
-        ),
-      ]),
-      Text("$result")
-    ],
+        ]),
+        Text(result)
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<List<String>> requestedUsersNotifier = ValueNotifier(requestedUIDs);
-    key: _scaffoldKey;
+    ValueNotifier<List<String>> requestedUsersNotifier =
+        ValueNotifier(requestedUIDs);
+    key:
+    _scaffoldKey;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(leading: BackButton(onPressed:() => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ChatsHome(user)),
-      )),
-          title: const Text("Chat Requests")),
-      body:   FutureBuilder(
-          future: initialize(),
-          builder: ((context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
-              return ValueListenableBuilder(valueListenable: requestedUsersNotifier, builder: (context, List<String> currList, child){
-                return ListView.builder(
-                    itemCount: requestedUIDs == null? 0 : requestedUIDs.length,
-                    itemBuilder: (context, index) {
-                      return Dismissible(key: Key("$requestedUIDs[index]"), child: chatRequestBuilder(index, context),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd){
-                                removal(index);
-                                print("Swiped right");
-                            }
-                            else {
-                              removal(index);
-                              print("Swiped left");
-                            }
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+            leading: BackButton(
+                onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatsHome(user)),
+                    )),
+            title: const Text("Chat Requests")),
+        body: FutureBuilder(
+            future: initialize(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                return ValueListenableBuilder(
+                    valueListenable: requestedUsersNotifier,
+                    builder: (context, List<String> currList, child) {
+                      return ListView.builder(
+                          itemCount:
+                              requestedUIDs == null ? 0 : requestedUIDs.length,
+                          itemBuilder: (context, index) {
+                            var temp = requestedUIDs[index];
+                            return Dismissible(
+                                key: Key(temp),
+                                child: chatRequestBuilder(index, context),
+                                onDismissed: (direction) {
+                                  if (direction ==
+                                      DismissDirection.startToEnd) {
+                                    removal(index);
+                                    print("Swiped right");
+                                  } else {
+                                    removal(index);
+                                    print("Swiped left");
+                                  }
+                                });
                           });
                     });
-
+              } else {
+                return Text("Error");
               }
-              );
-            }
-            else {
-              return Text("Error");
-            }
-          })
-      )
-    );
+            })));
   }
 }
-
