@@ -42,11 +42,11 @@ class InfoGetter {
       return Future(() => _name);
     }
     await db.collection("users").doc(userID).get().then((value) => {
-      if (value.exists)
-        {
-          _name = value.data()!["Name"] as String,
-        }
-    });
+          if (value.exists)
+            {
+              _name = value.data()!["Name"] as String,
+            }
+        });
     return _name;
   }
 
@@ -57,11 +57,11 @@ class InfoGetter {
       return Future(() => _imageURL);
     }
     await db.collection("users").doc(userID).get().then((value) => {
-      if (value.exists)
-        {
-          _imageURL = value.data()!["imageURL"] as String,
-        }
-    });
+          if (value.exists)
+            {
+              _imageURL = value.data()!["imageURL"] as String,
+            }
+        });
     return _imageURL;
   }
 
@@ -74,9 +74,7 @@ class InfoGetter {
 
     await db.collection("users").doc(userID).get().then((value) => {
           if (value.exists)
-            {
-              _faculty = value.data()!["faculty"] as String,
-            }
+            {print(userID), _faculty = value.data()!["faculty"] as String}
         });
     return _faculty;
   }
@@ -163,6 +161,4 @@ class InfoGetter {
     }).toList();
     return result.whereNotNull().toList();
   }
-
-
 }

@@ -239,11 +239,12 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                       try {
                         List<String>? idList =
                             await InfoGetter.currIncoming(userid: currUserId);
-                        if (idList == null) {
+                        if (idList.isEmpty) {
                           snapshot.set({
                             "incoming": [_user!.uid]
                           });
                         } else {
+                          print(_user!.uid + "set");
                           snapshot.set(
                               UserMaps.incomingRequest(_user!.uid, idList));
                         }
@@ -253,7 +254,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                       setState(() {
                         print("right");
                         removeLast();
-                        //draggableItems.removeAt(index);
                       });
                     },
                   ),

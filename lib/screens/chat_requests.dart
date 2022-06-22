@@ -1,3 +1,4 @@
+import 'package:close_contact/firestore/info-setter.dart';
 import 'package:close_contact/screens/chats_home.dart';
 import 'package:close_contact/screens/profile_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,9 +28,9 @@ class ChatRequest extends State<ChatRequestPage> {
   String currName = "";
   List<String> requestedImages = [];
   String currImage = "";
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   initialize() async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
     var temp = await db
         .collection("users")
         .get()
@@ -134,12 +135,25 @@ class ChatRequest extends State<ChatRequestPage> {
                             return Dismissible(
                                 key: Key(temp),
                                 child: chatRequestBuilder(index, context),
-                                onDismissed: (direction) {
+                                onDismissed: (direction) async {
                                   if (direction ==
                                       DismissDirection.startToEnd) {
+                                    await InfoSetter.setCurrConvo(
+                                        userid: user.uid,
+                                        newConvo: requestedUIDs[index]);
+                                    await InfoSetter.setCurrConvo(
+                                        userid: requestedUIDs[index],
+                                        newConvo: user.uid);
+                                    await InfoSetter.setCurrRequests(
+                                        userid: user.uid,
+                                        oldRequest: requestedUIDs[index]);
                                     removal(index);
+
                                     print("Swiped right");
                                   } else {
+                                    await InfoSetter.setCurrRequests(
+                                        userid: user.uid,
+                                        oldRequest: requestedUIDs[index]);
                                     removal(index);
                                     print("Swiped left");
                                   }
