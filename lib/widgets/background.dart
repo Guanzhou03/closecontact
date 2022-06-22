@@ -23,14 +23,14 @@ class BackgroudCurveWidget extends StatelessWidget {
         ),
       ),
       child: const Padding(
-        padding: EdgeInsets.only(top: 16.0, left: 20.0),
+        padding: EdgeInsets.only(top: 16.0, left: 20.0, bottom: 55.0),
         child: Text(
           'Find Close Contacts',
           style: TextStyle(
             // fontFamily: 'Murray Hill',
             fontWeight: FontWeight.w800,
             color: Colors.white,
-            fontSize: 28,
+            fontSize: 25,
           ),
         ),
       ),

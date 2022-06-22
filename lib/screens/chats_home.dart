@@ -7,13 +7,11 @@ import '../models/message_model.dart';
 
 class ChatsHome extends StatelessWidget {
   final User user;
-  List<String> currConversations = [];
+  List<String> currConversations = []; //list of userIDs that the user is chatting with
   void initialMessages() {
-    for (int i = 0; i < 5; i++) {
-      currConversations.add('jDYEwSEStySyb4DRfBmjGsUnpF63');
-      currConversations.add('JqD1JCk5MZR5gBMxzYHCd66z6po2');
-      currConversations.add('QLVpECCTMAgPAZr1dw0TuxQsljF3');
-    }
+    currConversations.add('jDYEwSEStySyb4DRfBmjGsUnpF63');
+    currConversations.add('JqD1JCk5MZR5gBMxzYHCd66z6po2');
+    currConversations.add('QLVpECCTMAgPAZr1dw0TuxQsljF3');
   }
   ChatsHome(this.user, {Key? key}) : super(key: key);
   var _counter = 0; //increment this when there is chat request
