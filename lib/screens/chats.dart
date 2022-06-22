@@ -32,9 +32,11 @@ class _ChatState extends State<Chat> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? ListView.builder(
+                shrinkWrap: true,
+                reverse: true,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  var temp = snapshot.data!.docs[index].data()! as Map;
+                  var temp = snapshot.data!.docs[snapshot.data!.docs.length-1-index].data()! as Map;
                   return MessageTile(
                     message: temp["message"],
                     sendByMe: temp["sendBy"] == myName,
@@ -87,6 +89,7 @@ class _ChatState extends State<Chat> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(title: Text(otherName)),
               body: Container(
                 child: Stack(
@@ -113,9 +116,6 @@ class _ChatState extends State<Chat> {
                                   ),
                                   border: InputBorder.none),
                             )),
-                            SizedBox(
-                              width: 16,
-                            ),
                             GestureDetector(
                               onTap: () {
                                 addMessage();
@@ -127,8 +127,7 @@ class _ChatState extends State<Chat> {
                                       gradient: LinearGradient(
                                           colors: [
                                             const Color(0x36FFFFFF),
-                                            const Color(0x0FFFFFFF)
-                                          ],
+                                            const Color(0x0FFFFFFF)],
                                           begin: FractionalOffset.topLeft,
                                           end: FractionalOffset.bottomRight),
                                       borderRadius: BorderRadius.circular(40)),
