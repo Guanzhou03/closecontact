@@ -161,4 +161,19 @@ class InfoGetter {
     }).toList();
     return result.whereNotNull().toList();
   }
+
+  static Future<List<String>> currConvoGetter({required userid}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<String> _currConvo = [];
+    if (userid == "") {
+      return Future(() => _currConvo);
+    }
+    await db.collection("users").doc(userid).get().then((value) => {
+          if (value.exists)
+            {
+              _currConvo = List<String>.from(value.data()!["currConvo"]),
+            }
+        });
+    return _currConvo;
+  }
 }

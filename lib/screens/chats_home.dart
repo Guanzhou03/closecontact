@@ -1,18 +1,22 @@
+import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/screens/chat_requests.dart';
 import 'package:close_contact/widgets/category_selector.dart';
 import 'package:close_contact/widgets/recent_chats.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/message_model.dart';
 
 class ChatsHome extends StatelessWidget {
   final User user;
-  List<String> currConversations = []; //list of userIDs that the user is chatting with
-  void initialMessages() {
-    currConversations.add('jDYEwSEStySyb4DRfBmjGsUnpF63');
-    currConversations.add('JqD1JCk5MZR5gBMxzYHCd66z6po2');
-    currConversations.add('QLVpECCTMAgPAZr1dw0TuxQsljF3');
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  List<String> currConversations =
+      []; //list of userIDs that the user is chatting with
+
+  void initialMessages() async {
+    currConversations = await InfoGetter.currConvoGetter(userid: user.uid);
   }
+
   ChatsHome(this.user, {Key? key}) : super(key: key);
   var _counter = 0; //increment this when there is chat request
 
@@ -26,12 +30,16 @@ class ChatsHome extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text("Chats",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
+              Text(
+                "Chats",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(primary: Colors.grey),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ChatRequestPage(this.user)),
+                    MaterialPageRoute(
+                        builder: (context) => ChatRequestPage(this.user)),
                   );
                 },
                 icon: new Stack(
@@ -79,10 +87,10 @@ class ChatsHome extends StatelessWidget {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  RecentChats(this.user, currConversations), //user we need to retrieve from database
-                ],
+              child: Container(
+                //feel free to edit decorations
+                child: RecentChats(this.user,
+                    currConversations), //user we need to retrieve from database
               ),
             ),
           )
