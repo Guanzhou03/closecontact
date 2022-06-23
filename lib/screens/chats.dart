@@ -184,9 +184,7 @@ class MessageTile extends StatelessWidget {
                     : [
                         Color.fromARGB(255, 206, 211, 215),
                         Color.fromARGB(255, 103, 108, 108)
-                      ]
-                //[const Color(0x1AFFFFFF), const Color(0x1AFFFFFF)],
-                )),
+                      ])),
         child: Text(message,
             textAlign: TextAlign.start,
             style: TextStyle(

@@ -8,18 +8,17 @@ class Home extends StatelessWidget {
   final User user;
   Home(this.user, {Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(title: const Text("Home Page")),
-      body: Stack(
-          children:  [
-            BackgroudCurveWidget(),
-            CardsStackWidget(),
-          ]),
-        );
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: const Text("Home Page")),
+      body: Stack(children: [
+        BackgroudCurveWidget(),
+        CardsStackWidget(),
+      ]),
+    );
   }
 }
+
 enum Swipe { left, right, none }

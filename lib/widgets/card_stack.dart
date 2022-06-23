@@ -65,7 +65,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   @override
   void initState() {
     _future = loadProfiles();
-    print("hi");
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -236,17 +235,42 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                           .doc(currUserId)
                           .collection("requests")
                           .doc("incoming");
+                      var currUserInfo =
+                          await db.collection("users").doc(_user!.uid).get();
+                      var bool = currUserInfo.data()!.containsKey("Name") &&
+                          currUserInfo.data()!.containsKey("imageURL") &&
+                          currUserInfo.data()!.containsKey("userid") &&
+                          currUserInfo.data()!.containsKey("Email") &&
+                          currUserInfo.data()!.containsKey("bio") &&
+                          currUserInfo.data()!.containsKey("year") &&
+                          currUserInfo.data()!.containsKey("activities") &&
+                          currUserInfo.data()!.containsKey("faculty");
                       try {
+                        if (!bool) {
+                          print("fucking fill up your shit");
+                          return null;
+                        }
+
                         List<String>? idList =
                             await InfoGetter.currIncoming(userid: currUserId);
+                        List<String> currConvo =
+                            await InfoGetter.currConvoGetter(
+                                userid: currUserId);
                         if (idList.isEmpty) {
-                          snapshot.set({
-                            "incoming": [_user!.uid]
-                          });
+                          if (currConvo.isEmpty ||
+                              !currConvo.contains(_user!.uid)) {
+                            snapshot.set({
+                              "incoming": [_user!.uid]
+                            });
+                          }
                         } else {
-                          print(_user!.uid + "set");
-                          snapshot.set(
-                              UserMaps.incomingRequest(_user!.uid, idList));
+                          if (!idList.contains(_user!.uid)) {
+                            if (currConvo.isEmpty ||
+                                !currConvo.contains(_user!.uid)) {
+                              snapshot.set(
+                                  UserMaps.incomingRequest(_user!.uid, idList));
+                            }
+                          }
                         }
                       } catch (e) {
                         print(e);

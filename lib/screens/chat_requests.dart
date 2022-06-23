@@ -73,6 +73,9 @@ class ChatRequest extends State<ChatRequestPage> {
   }
 
   Widget chatRequestBuilder(index, context) {
+    print(requestedUIDs);
+    print("name is: " + requestedNames.toString());
+    print(requestedImages);
     String result = requestedNames[index];
     return Row(
       children: [
