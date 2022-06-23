@@ -57,23 +57,32 @@ class RecentChats extends StatelessWidget {
   String getUserName(types.User user) =>
       '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 
-  Widget _buildAvatar(index) {
-    return UserProfileAvatar(
-      avatarUrl: requestedImages[index],
-      onAvatarTap: () {
-        print("tapped");
-      },
-      radius: 40,
-      isActivityIndicatorSmall: false,
-      avatarBorderData: AvatarBorderData(
-        borderColor: Colors.white,
-        borderWidth: 5.0,
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
+    Widget _buildAvatar(index) {
+      return UserProfileAvatar(
+        avatarUrl: requestedImages[index],
+        onAvatarTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Chat(
+                chatRoomId: roomIDs[index],
+                me: user.uid,
+                other: currConversations[index],
+              ),
+            ),
+          );
+        },
+        radius: 40,
+        isActivityIndicatorSmall: false,
+        avatarBorderData: AvatarBorderData(
+          borderColor: Colors.white,
+          borderWidth: 5.0,
+        ),
+      );
+    }
     return FutureBuilder(
         future: initialize(),
         builder: ((context, snapshot) {
@@ -94,6 +103,7 @@ class RecentChats extends StatelessWidget {
                     //final room = snapshot.data![index];
 
                     return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
