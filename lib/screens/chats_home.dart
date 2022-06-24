@@ -31,8 +31,8 @@ class ChatsHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "Chats",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                "Close Contacts",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(primary: Colors.grey),
@@ -45,28 +45,28 @@ class ChatsHome extends StatelessWidget {
                 icon: new Stack(
                   children: <Widget>[
                     new Icon(Icons.notifications),
-                    new Positioned(
-                      right: 0,
-                      child: new Container(
-                        padding: EdgeInsets.all(1),
-                        decoration: new BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 12,
-                          minHeight: 12,
-                        ),
-                        child: new Text(
-                          '$_counter', //this is the number of chat requests
-                          style: new TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
+                    // new Positioned(
+                    //   right: 0,
+                    //   child: new Container(
+                    //     padding: EdgeInsets.all(1),
+                    //     decoration: new BoxDecoration(
+                    //       color: Colors.red,
+                    //       borderRadius: BorderRadius.circular(6),
+                    //     ),
+                    //     constraints: BoxConstraints(
+                    //       minWidth: 12,
+                    //       minHeight: 12,
+                    //     ),
+                    //     child: new Text(
+                    //       '$_counter', //this is the number of chat requests
+                    //       style: new TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 8,
+                    //       ),
+                    //       textAlign: TextAlign.center,
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
                 label: Text('Chat Requests'), // <-- Text
@@ -74,14 +74,13 @@ class ChatsHome extends StatelessWidget {
             ],
           ),
         ),
-        elevation: 0.0,
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30.0),
                   topRight: Radius.circular(30.0),

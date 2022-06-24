@@ -352,9 +352,13 @@ class ProfilePageState extends State<MyProfilePage> {
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Computing',
-                                  'Fac2',
-                                  'Fac3',
-                                  'Fac4'
+                                  'FoS',
+                                  'FASS',
+                                  'Business',
+                                  'Law',
+                                  'Nursing',
+                                  'Medicine',
+                                  'Other'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -395,7 +399,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'Year 2',
                                   'Year 3',
                                   'Year 4',
-                                  'Year 5'
+                                  'Year 5',
+                                  'Other'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,

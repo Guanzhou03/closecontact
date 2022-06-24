@@ -158,7 +158,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 26.0),
+                    padding: const EdgeInsets.only(bottom: 15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
