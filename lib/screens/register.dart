@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/authentication/fire_auth.dart';
 import 'package:close_contact/authentication/validator.dart';
-import 'package:close_contact/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  static const String _title = 'Register Screen';
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _password1Controller = TextEditingController();
@@ -116,34 +114,30 @@ class Register extends StatelessWidget {
                           users
                               .doc(user.uid)
                               .set({
-
-                            "userid": user.uid,
-
-                            "Name": _nameController.text,
-                            "Email": _emailController.text,
-                          })
-                              .then((value) =>
-                              showDialog(context: _scaffoldKey.currentContext!,
-                                  builder: (context) =>
-                                      AlertDialog(content: Text(
-                                          "Email verification sent!")))
-                          )
-                              .catchError((error) =>
-                              showDialog(context: _scaffoldKey.currentContext!,
-                                  builder: (context) =>
-                                      AlertDialog(content: Text(
-
+                                "userid": user.uid,
+                                "Name": _nameController.text,
+                                "Email": _emailController.text,
+                              })
+                              .then((value) => showDialog(
+                                  context: _scaffoldKey.currentContext!,
+                                  builder: (context) => AlertDialog(
+                                      content:
+                                          Text("Email verification sent!"))))
+                              .catchError((error) => showDialog(
+                                  context: _scaffoldKey.currentContext!,
+                                  builder: (context) => AlertDialog(
+                                      content: Text(
                                           'Failed to add user : $error'))));
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => LogIn()),
                           );
                         }
-                      }
-                      catch(SignUpError) {
-                        showDialog(context: _scaffoldKey.currentContext!,
-                            builder: (dialogContext) =>
-                                AlertDialog(content: Text('Failed to add user: Account already exists!')));
-
+                      } catch (SignUpError) {
+                        showDialog(
+                            context: _scaffoldKey.currentContext!,
+                            builder: (dialogContext) => AlertDialog(
+                                content: Text(
+                                    'Failed to add user: Account already exists!')));
                       }
                     }
                   },

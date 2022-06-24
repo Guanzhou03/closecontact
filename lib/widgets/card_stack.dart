@@ -23,26 +23,11 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   static List<Profile> draggableItems = [];
   static List<String> userIdList = [];
   Future<void> _future = Future(() {});
-  // [
-  //   const Profile(
-  //       name: 'Cute Lion',
-  //       interests: 'Badminton',
-  //       imageURL: 'https://picsum.photos/id/237/5000/5000'),
-  //   const Profile(
-  //       name: 'Johnny Depp',
-  //       interests: 'Squash',
-  //       imageURL: 'https://picsum.photos/id/237/5000/5000'),
-  //   const Profile(
-  //       name: 'Amber Heard',
-  //       interests: 'Testing',
-  //       imageURL: 'https://picsum.photos/id/237/5000/5000'),
-  // ];
 
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
 
   static Future<void> loadProfiles() async {
-    print(_user?.displayName);
     await auth.authStateChanges().listen((User? user) {
       _user = user;
     });
@@ -50,7 +35,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
     draggableItems = temp;
     var temp2 = await InfoGetter.userIdListGetter(user: _user);
     userIdList = temp2;
-    print(draggableItems.length.toString() + "profiles loaded");
   }
 
   static Future<void> removeLast() async {
@@ -205,7 +189,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                     },
                     onAccept: (int index) {
                       setState(() {
-                        print("left");
                         removeLast();
                         //draggableItems.removeAt(index);
                       });
@@ -237,17 +220,25 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                           .doc("incoming");
                       var currUserInfo =
                           await db.collection("users").doc(_user!.uid).get();
-                      var bool = currUserInfo.data()!.containsKey("Name") &&
-                          currUserInfo.data()!.containsKey("imageURL") &&
-                          currUserInfo.data()!.containsKey("userid") &&
-                          currUserInfo.data()!.containsKey("Email") &&
-                          currUserInfo.data()!.containsKey("bio") &&
-                          currUserInfo.data()!.containsKey("year") &&
-                          currUserInfo.data()!.containsKey("activities") &&
-                          currUserInfo.data()!.containsKey("faculty");
+                      var currMap = currUserInfo.data();
+                      var bool = currMap!.containsKey("Name") &&
+                          currMap.containsKey("imageURL") &&
+                          currMap["imageURL"] != " " &&
+                          currMap.containsKey("userid") &&
+                          currMap.containsKey("Email") &&
+                          currMap.containsKey("bio") &&
+                          currMap.containsKey("year") &&
+                          currMap.containsKey("activities") &&
+                          currMap.containsKey("faculty");
                       try {
                         if (!bool) {
-                          print("fucking fill up your shit");
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Text(
+                                  "Please complete your profile before swiping!"),
+                            ),
+                          );
                           return null;
                         }
 
@@ -276,7 +267,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                         print(e);
                       }
                       setState(() {
-                        print("right");
                         removeLast();
                       });
                     },

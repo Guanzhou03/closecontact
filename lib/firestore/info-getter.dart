@@ -1,10 +1,5 @@
-import 'dart:ffi';
-
-import 'package:close_contact/screens/profile.dart';
 import 'package:close_contact/widgets/profile_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:collection/collection.dart';
 
 class InfoGetter {
@@ -73,8 +68,7 @@ class InfoGetter {
     }
 
     await db.collection("users").doc(userID).get().then((value) => {
-          if (value.exists)
-            {print(userID), _faculty = value.data()!["faculty"] as String}
+          if (value.exists) {_faculty = value.data()!["faculty"] as String}
         });
     return _faculty;
   }
@@ -132,13 +126,12 @@ class InfoGetter {
       var imageURL = e["imageURL"];
       late String photoURL;
       if (uid == user.uid) return null;
-      if (imageURL == null) {
-        photoURL = 'https://picsum.photos/id/237/5000/5000';
+      if (imageURL == " ") {
+        return null;
       } else {
         photoURL = imageURL;
       }
       try {
-        print("photo is: " + photoURL);
         return Profile(name: name, interests: interests, imageURL: photoURL);
       } catch (e) {
         return Profile(
@@ -171,7 +164,8 @@ class InfoGetter {
     await db.collection("users").doc(userid).get().then((value) => {
           if (value.exists)
             {
-              _currConvo = List<String>.from(value.data()!["currConvo"]),
+              if (value.data()!.containsKey("currConvo"))
+                {_currConvo = List<String>.from(value.data()!["currConvo"])}
             }
         });
     return _currConvo;

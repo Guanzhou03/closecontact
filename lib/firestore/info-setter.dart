@@ -42,7 +42,6 @@ class InfoSetter {
         .toList()
         .whereNotNull()
         .toList();
-    print(result);
     ref.set({"incoming": result}, SetOptions(merge: true));
   }
 }

@@ -1,15 +1,13 @@
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/screens/chat_requests.dart';
-import 'package:close_contact/widgets/category_selector.dart';
 import 'package:close_contact/widgets/recent_chats.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/message_model.dart';
 
 class ChatsHome extends StatelessWidget {
   final User user;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
   List<String> currConversations =
       []; //list of userIDs that the user is chatting with
 
@@ -18,7 +16,7 @@ class ChatsHome extends StatelessWidget {
   }
 
   ChatsHome(this.user, {Key? key}) : super(key: key);
-  var _counter = 0; //increment this when there is chat request
+  //var _counter = 0; //increment this when there is chat request
 
   @override
   Widget build(BuildContext context) {

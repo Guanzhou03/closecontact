@@ -1,13 +1,8 @@
 import 'package:close_contact/firestore/info-getter.dart';
-import 'package:close_contact/models/message_model.dart';
 import 'package:close_contact/screens/chats.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:close_contact/screens/home.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 
 class RecentChats extends StatelessWidget {
@@ -57,8 +52,6 @@ class RecentChats extends StatelessWidget {
   String getUserName(types.User user) =>
       '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 
-
-
   @override
   Widget build(BuildContext context) {
     Widget _buildAvatar(index) {
@@ -83,6 +76,7 @@ class RecentChats extends StatelessWidget {
         ),
       );
     }
+
     return FutureBuilder(
         future: initialize(),
         builder: ((context, snapshot) {

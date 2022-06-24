@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:close_contact/firestore/info-getter.dart';
-import 'package:close_contact/models/constants.dart';
 import 'package:close_contact/models/database.dart';
 import 'package:close_contact/models/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,7 +34,9 @@ class _ChatState extends State<Chat> {
                 reverse: true,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  var temp = snapshot.data!.docs[snapshot.data!.docs.length-1-index].data()! as Map;
+                  var temp = snapshot
+                      .data!.docs[snapshot.data!.docs.length - 1 - index]
+                      .data()! as Map;
                   return MessageTile(
                     message: temp["message"],
                     sendByMe: temp["sendBy"] == myName,
@@ -44,6 +44,52 @@ class _ChatState extends State<Chat> {
                 })
             : Container();
       },
+    );
+  }
+
+  Widget messageBar() {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        color: Color(0x54FFFFFF),
+        child: Row(
+          children: [
+            Expanded(
+                child: TextField(
+              controller: messageEditingController,
+              style: simpleTextStyle(),
+              decoration: InputDecoration(
+                  hintText: "Message ...",
+                  hintStyle: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 16,
+                  ),
+                  border: InputBorder.none),
+            )),
+            GestureDetector(
+              onTap: () {
+                addMessage();
+              },
+              child: Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            const Color(0x36FFFFFF),
+                            const Color(0x0FFFFFFF)
+                          ],
+                          begin: FractionalOffset.topLeft,
+                          end: FractionalOffset.bottomRight),
+                      borderRadius: BorderRadius.circular(40)),
+                  padding: EdgeInsets.all(12),
+                  child: Icon(Icons.send)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -94,50 +140,14 @@ class _ChatState extends State<Chat> {
               body: Container(
                 child: Stack(
                   children: [
-                    chatMessages(),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      width: MediaQuery.of(context).size.width,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                        color: Color(0x54FFFFFF),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: TextField(
-                              controller: messageEditingController,
-                              style: simpleTextStyle(),
-                              decoration: InputDecoration(
-                                  hintText: "Message ...",
-                                  hintStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                  ),
-                                  border: InputBorder.none),
-                            )),
-                            GestureDetector(
-                              onTap: () {
-                                addMessage();
-                              },
-                              child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          colors: [
-                                            const Color(0x36FFFFFF),
-                                            const Color(0x0FFFFFFF)],
-                                          begin: FractionalOffset.topLeft,
-                                          end: FractionalOffset.bottomRight),
-                                      borderRadius: BorderRadius.circular(40)),
-                                  padding: EdgeInsets.all(12),
-                                  child: Icon(Icons.send)),
-                            ),
-                          ],
-                        ),
+                    Positioned(
+                      bottom: 90,
+                      child: SizedBox(
+                        width: 400,
+                        child: chatMessages(),
                       ),
                     ),
+                    messageBar(),
                   ],
                 ),
               ),

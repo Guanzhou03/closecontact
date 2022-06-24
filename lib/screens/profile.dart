@@ -1,6 +1,5 @@
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/firestore/info-getter.dart';
-import 'package:close_contact/widgets/sports_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -9,12 +8,8 @@ import 'package:close_contact/screens/signin.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:close_contact/widgets/bottom_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:close_contact/firestore/user_maps.dart';
-import 'package:collection/collection.dart';
 
 class MyProfilePage extends StatefulWidget {
   User user;
@@ -70,12 +65,12 @@ class ProfilePageState extends State<MyProfilePage> {
     _facultyController.text = "Please choose a faculty";
   }
 
-  _saveForm() {
-    var form = _formKey.currentState!;
-    if (form.validate()) {
-      form.save();
-    }
-  }
+  // _saveForm() {
+  //   var form = _formKey.currentState!;
+  //   if (form.validate()) {
+  //     form.save();
+  //   }
+  // }
 
   File? _image;
 
@@ -93,7 +88,6 @@ class ProfilePageState extends State<MyProfilePage> {
       setState(() {
         this._image = imageTemp;
         imageUrl = value;
-        print(imageUrl);
       });
     });
   }
@@ -141,9 +135,7 @@ class ProfilePageState extends State<MyProfilePage> {
                           avatarUrl: imageUrl == " "
                               ? 'https://picsum.photos/id/237/5000/5000'
                               : imageUrl,
-                          onAvatarTap: () {
-                            print("tapped");
-                          },
+                          onAvatarTap: () {},
                           avatarSplashColor: Colors.purple,
                           radius: 100,
                           isActivityIndicatorSmall: false,
@@ -320,7 +312,6 @@ class ProfilePageState extends State<MyProfilePage> {
                           hintWidget: Text('Please select your interests'),
                           onSaved: (value) {
                             _activityString = value.toString();
-                            print(_activityString);
                             if (value == null) return;
                           },
                         ),
@@ -439,7 +430,6 @@ class ProfilePageState extends State<MyProfilePage> {
                                   {"imageURL": imageUrl},
                                   SetOptions(merge: true));
                               user.updatePhotoURL(imageUrl);
-                              print(user.photoURL);
                             }
                           },
                         ),

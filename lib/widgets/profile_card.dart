@@ -35,17 +35,17 @@ class ProfileCard extends StatelessWidget {
     );
   }
 
-
   Widget chipList(List<String> interestsList) {
     return Wrap(
         spacing: 3.0,
-        children: interestsList.map((interest) => _buildChip(interest)).toList()
-    );
+        children:
+            interestsList.map((interest) => _buildChip(interest)).toList());
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 580,
+      height: 630,
       width: 340,
       padding: const EdgeInsets.only(bottom: 60),
       child: Stack(
@@ -87,8 +87,13 @@ class ProfileCard extends StatelessWidget {
                         fontSize: 21,
                       ),
                     ),
-                    profile.interests == ""? Text("No interests listed"):
-                    chipList(profile.interests.substring(1, profile.interests.length - 1).split(',').map((x) => x.trim()).toList()),
+                    profile.interests == ""
+                        ? Text("No interests listed")
+                        : chipList(profile.interests
+                            .substring(1, profile.interests.length - 1)
+                            .split(',')
+                            .map((x) => x.trim())
+                            .toList()),
                   ],
                 ),
               ),

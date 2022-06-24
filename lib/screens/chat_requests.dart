@@ -4,14 +4,11 @@ import 'package:close_contact/screens/profile_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:close_contact/widgets/card_stack.dart';
-import 'package:close_contact/widgets/background.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:close_contact/firestore/info-getter.dart';
 
 class ChatRequestPage extends StatefulWidget {
-  User user;
+  final User user;
   ChatRequestPage(this.user, {Key? key}) : super(key: key);
 
   @override
@@ -21,7 +18,6 @@ class ChatRequestPage extends StatefulWidget {
 class ChatRequest extends State<ChatRequestPage> {
   final User user;
   ChatRequest(this.user);
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String imageUrl = " ";
   List<String> requestedUIDs = [];
   List<String> requestedNames = [];
@@ -31,11 +27,6 @@ class ChatRequest extends State<ChatRequestPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   initialize() async {
-    var temp = await db
-        .collection("users")
-        .get()
-        .then((value) => value.docs)
-        .then((value) => value.map((e) => e.data()));
     requestedUIDs = await InfoGetter.currIncoming(userid: user.uid);
     await currNameSetter(requestedUIDs);
     await currImageSetter(requestedUIDs);
@@ -73,9 +64,6 @@ class ChatRequest extends State<ChatRequestPage> {
   }
 
   Widget chatRequestBuilder(index, context) {
-    print(requestedUIDs);
-    print("name is: " + requestedNames.toString());
-    print(requestedImages);
     String result = requestedNames[index];
     return Row(
       children: [
@@ -107,8 +95,6 @@ class ChatRequest extends State<ChatRequestPage> {
   Widget build(BuildContext context) {
     ValueNotifier<List<String>> requestedUsersNotifier =
         ValueNotifier(requestedUIDs);
-    key:
-    _scaffoldKey;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -131,8 +117,7 @@ class ChatRequest extends State<ChatRequestPage> {
                     valueListenable: requestedUsersNotifier,
                     builder: (context, List<String> currList, child) {
                       return ListView.builder(
-                          itemCount:
-                              requestedUIDs == null ? 0 : requestedUIDs.length,
+                          itemCount: requestedUIDs.length,
                           itemBuilder: (context, index) {
                             var temp = requestedUIDs[index];
                             return Dismissible(
@@ -151,14 +136,11 @@ class ChatRequest extends State<ChatRequestPage> {
                                         userid: user.uid,
                                         oldRequest: requestedUIDs[index]);
                                     removal(index);
-
-                                    print("Swiped right");
                                   } else {
                                     await InfoSetter.setCurrRequests(
                                         userid: user.uid,
                                         oldRequest: requestedUIDs[index]);
                                     removal(index);
-                                    print("Swiped left");
                                   }
                                 });
                           });
