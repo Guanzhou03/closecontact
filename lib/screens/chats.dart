@@ -31,6 +31,7 @@ class _ChatState extends State<Chat> {
         return snapshot.hasData
             ? ListView.builder(
                 shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
                 reverse: true,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
@@ -141,7 +142,10 @@ class _ChatState extends State<Chat> {
                 child: Stack(
                   children: [
                     Positioned(
-                      bottom: 90,
+                      bottom: 100,
+                      top:0,
+                      left:0,
+                      right:0,
                       child: SizedBox(
                         width: 400,
                         child: chatMessages(),
