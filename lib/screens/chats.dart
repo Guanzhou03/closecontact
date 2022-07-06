@@ -3,6 +3,7 @@ import 'package:close_contact/models/database.dart';
 import 'package:close_contact/models/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ntp/ntp.dart';
 
 class Chat extends StatefulWidget {
   final String chatRoomId;
@@ -94,12 +95,14 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  addMessage() {
+  addMessage() async {
     if (messageEditingController.text.isNotEmpty) {
+      DateTime startDate = new DateTime.now().toLocal();
+      int offset = await NTP.getNtpOffset(localTime: startDate);
       Map<String, dynamic> chatMessageMap = {
         "sendBy": myName,
         "message": messageEditingController.text,
-        'time': DateTime.now().millisecondsSinceEpoch,
+        'time': startDate.add(new Duration(milliseconds: offset)), //real time
       };
 
       DatabaseMethods().addMessage(widget.chatRoomId, chatMessageMap);

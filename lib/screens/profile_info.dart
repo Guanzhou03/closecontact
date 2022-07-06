@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:close_contact/firestore/info-getter.dart';
+import 'package:close_contact/screens/chat_requests.dart';
+import '../firestore/info-setter.dart';
+import '../widgets/action_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileInfo extends StatelessWidget {
   final String UID;
-  ProfileInfo(this.UID, {Key? key}) : super(key: key);
+  final User user;
+  ProfileInfo(this.user, this.UID, {Key? key}) : super(key: key);
 
   String _faculty = "";
   String _year = "";
@@ -122,7 +127,45 @@ class ProfileInfo extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return chipList();
                       }),
-                ]);
+                  Container //container for padding
+                    (child:Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ActionButtonWidget(
+                        onPressed: () async {
+                          await InfoSetter.setCurrConvo(
+                              userid: user.uid,
+                              newConvo: UID);
+                          await InfoSetter.setCurrConvo(
+                              userid: UID,
+                              newConvo: user.uid);
+                          await InfoSetter.setCurrRequests(
+                              userid: user.uid,
+                              oldRequest: UID);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ChatRequestPage(user)));
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.blueAccent,
+                          size: 30
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      ActionButtonWidget(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  padding: EdgeInsets.only(top:30))
+              ]);
               } else {
                 return Text("Error");
               }

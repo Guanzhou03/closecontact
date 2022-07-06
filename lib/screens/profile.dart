@@ -26,15 +26,19 @@ class ProfilePageState extends State<MyProfilePage> {
   String _activityString = "";
   static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
-
   String imageUrl = " ";
-
+  String _gender = "Gender";
+  String _area = "Area";
   ProfilePageState(this.user);
   User user;
 
   Future<void> setControllers() async {
     var bio = await InfoGetter.bioGetter(userID: user.uid);
     _bioController.text = bio;
+    var area = await InfoGetter.areaGetter(userID: user.uid);
+    _areaController.text = area;
+    var gender = await InfoGetter.genderGetter(userID: user.uid);
+    _genderController.text = gender;
     var faculty = await InfoGetter.facultyGetter(userID: user.uid);
     _facultyController.text = faculty;
     _faculty = faculty;
@@ -52,7 +56,8 @@ class ProfilePageState extends State<MyProfilePage> {
       return x;
     }).toList();
   }
-
+  TextEditingController _genderController = TextEditingController();
+  TextEditingController _areaController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
   TextEditingController _facultyController = TextEditingController();
   TextEditingController _yearController =
@@ -325,7 +330,86 @@ class ProfilePageState extends State<MyProfilePage> {
                       // ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 5),
+                        child: Column(
+                          children: <Widget>[
+                            const Text('Gender ',
+                                style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: TextFormField(
+                          controller: _genderController,
+                          validator: (value) => Validator.validateYear(value),
+                          decoration: InputDecoration(
+                              suffixIcon: DropdownButtonFormField(
+                                hint: Text("Choose a gender",
+                                    style: TextStyle(color: Colors.black)),
+                                items: <String>[
+                                  'Male',
+                                  'Female',
+                                  'Other'
+                                ].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child:
+                                    Text(value, textAlign: TextAlign.right),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  _gender = value as String;
+                                },
+                              ),
+                              contentPadding:
+                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                        child: Column(
+                          children: <Widget>[
+                            const Text('Area',
+                                style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: TextFormField(
+                          controller: _areaController,
+                          validator: (value) => Validator.validateYear(value),
+                          decoration: InputDecoration(
+                              suffixIcon: DropdownButtonFormField(
+                                hint: Text("Choose your location",
+                                    style: TextStyle(color: Colors.black)),
+                                items: <String>[
+                                  'North',
+                                  'Northeast',
+                                  'East',
+                                  'West'
+                                ].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child:
+                                    Text(value, textAlign: TextAlign.right),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  _area = value as String;
+                                },
+                              ),
+                              contentPadding:
+                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
                         child: const Text(
                           'Faculty/Course of study ',
                           style: TextStyle(fontSize: 14),
@@ -424,6 +508,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                       _year,
                                       _activityString,
                                       _bioController.text,
+                                      _gender,
+                                      _area
                                     ),
                                   );
                               db.collection("users").doc(user.uid).set(

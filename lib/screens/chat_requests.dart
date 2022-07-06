@@ -65,7 +65,14 @@ class ChatRequest extends State<ChatRequestPage> {
 
   Widget chatRequestBuilder(index, context) {
     String result = requestedNames[index];
-    return Row(
+    return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+      onTap:() => Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProfileInfo(user, requestedUIDs[index])),
+      ),
+        child:Row(
       children: [
         Column(children: [
           UserProfileAvatar(
@@ -74,7 +81,7 @@ class ChatRequest extends State<ChatRequestPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProfileInfo(requestedUIDs[index])),
+                    builder: (context) => ProfileInfo(user, requestedUIDs[index])),
               );
             },
             avatarSplashColor: Colors.purple,
@@ -88,7 +95,7 @@ class ChatRequest extends State<ChatRequestPage> {
         ]),
         Text(result)
       ],
-    );
+    ));
   }
 
   @override
@@ -119,30 +126,7 @@ class ChatRequest extends State<ChatRequestPage> {
                       return ListView.builder(
                           itemCount: requestedUIDs.length,
                           itemBuilder: (context, index) {
-                            var temp = requestedUIDs[index];
-                            return Dismissible(
-                                key: Key(temp),
-                                child: chatRequestBuilder(index, context),
-                                onDismissed: (direction) async {
-                                  if (direction ==
-                                      DismissDirection.startToEnd) {
-                                    await InfoSetter.setCurrConvo(
-                                        userid: user.uid,
-                                        newConvo: requestedUIDs[index]);
-                                    await InfoSetter.setCurrConvo(
-                                        userid: requestedUIDs[index],
-                                        newConvo: user.uid);
-                                    await InfoSetter.setCurrRequests(
-                                        userid: user.uid,
-                                        oldRequest: requestedUIDs[index]);
-                                    removal(index);
-                                  } else {
-                                    await InfoSetter.setCurrRequests(
-                                        userid: user.uid,
-                                        oldRequest: requestedUIDs[index]);
-                                    removal(index);
-                                  }
-                                });
+                            return chatRequestBuilder(index, context);
                           });
                     });
               } else {

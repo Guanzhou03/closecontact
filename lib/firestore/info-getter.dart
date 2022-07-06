@@ -30,6 +30,36 @@ class InfoGetter {
     return _bio;
   }
 
+  static Future<String> areaGetter({required String userID}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String _area = "Add your location";
+    if (userID == "") {
+      return Future(() => _area);
+    }
+    await db.collection("users").doc(userID).get().then((value) => {
+      if (value.exists)
+        {
+          _area = value.data()?["area"] as String,
+        }
+    });
+    return _area;
+  }
+
+  static Future<String> genderGetter({required String userID}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String _area = "Add your gender";
+    if (userID == "") {
+      return Future(() => _area);
+    }
+    await db.collection("users").doc(userID).get().then((value) => {
+      if (value.exists)
+        {
+          _area = value.data()?["gender"] as String,
+        }
+    });
+    return _area;
+  }
+
   static Future<String> nameGetter({required String userID}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String _name = "name";
