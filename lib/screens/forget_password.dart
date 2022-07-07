@@ -5,7 +5,6 @@ import 'package:close_contact/authentication/validator.dart';
 class ForgetPassword extends StatelessWidget {
   ForgetPassword({Key? key}) : super(key: key);
   var _emailController = TextEditingController();
-  final _auth = FirebaseAuth.instance;
   final _formkey = GlobalKey<FormState>();
 
   // Future<AuthCredential> resetPassword({required String email}) async {
@@ -66,9 +65,8 @@ class ForgetPassword extends StatelessWidget {
                 try {
                   await FirebaseAuth.instance.sendPasswordResetEmail(
                       email: _emailController.text.trim());
-                  Navigator.of(context).pop();
+                  Navigator.of(context, rootNavigator: true).pop();
                 } catch (e) {
-                  print(e);
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -76,7 +74,6 @@ class ForgetPassword extends StatelessWidget {
                     ),
                   );
                 }
-
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(

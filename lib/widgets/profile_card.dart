@@ -4,39 +4,63 @@ class Profile {
   const Profile({
     required this.name,
     required this.interests,
-    required this.imageAsset,
+    required this.imageURL,
   });
   final String name;
   final String interests;
-  final String imageAsset;
+  final String imageURL;
 }
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({Key? key, required this.profile}) : super(key: key);
   final Profile profile;
 
+  Widget _buildChip(String label) {
+    return Chip(
+      labelPadding: EdgeInsets.all(0),
+      // avatar: CircleAvatar(
+      //   backgroundColor: Colors.white70,
+      //   child: Text(label[0].toUpperCase()),
+      // ),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.redAccent,
+      elevation: 3.0,
+      shadowColor: Colors.grey[60],
+      padding: EdgeInsets.all(5.0),
+    );
+  }
+
+  Widget chipList(List<String> interestsList) {
+    return Wrap(
+        spacing: 3.0,
+        children:
+            interestsList.map((interest) => _buildChip(interest)).toList());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 580,
+      height: 630,
       width: 340,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.only(bottom: 60),
       child: Stack(
         children: [
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                profile.imageAsset,
-                  fit:BoxFit.fitHeight
-              ),
+              child: Image.network(profile.imageURL, fit: BoxFit.fitHeight),
             ),
           ),
           Positioned(
             bottom: 0,
             child: Container(
-              height: 80,
-              width: 330,
+              height: 121,
+              width: 340,
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -63,15 +87,13 @@ class ProfileCard extends StatelessWidget {
                         fontSize: 21,
                       ),
                     ),
-                    Text(
-                      profile.interests,
-                      style: const TextStyle(
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    profile.interests == ""
+                        ? Text("No interests listed")
+                        : chipList(profile.interests
+                            .substring(1, profile.interests.length - 1)
+                            .split(',')
+                            .map((x) => x.trim())
+                            .toList()),
                   ],
                 ),
               ),

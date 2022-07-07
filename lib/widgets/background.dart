@@ -6,6 +6,9 @@ class BackgroudCurveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
+      child: Text("No more profiles for now!",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
       width: double.infinity,
       height: 350,
       decoration: const ShapeDecoration(
@@ -20,18 +23,6 @@ class BackgroudCurveWidget extends StatelessWidget {
             Color(0xFFFFB300),
             Color(0xFFFF6F00),
           ],
-        ),
-      ),
-      child: const Padding(
-        padding: EdgeInsets.only(top: 16.0, left: 20.0),
-        child: Text(
-          'Find Close Contacts',
-          style: TextStyle(
-            // fontFamily: 'Murray Hill',
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-            fontSize: 28,
-          ),
         ),
       ),
     );

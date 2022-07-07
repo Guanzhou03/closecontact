@@ -1,6 +1,5 @@
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/firestore/info-getter.dart';
-import 'package:close_contact/widgets/sports_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -9,45 +8,46 @@ import 'package:close_contact/screens/signin.dart';
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:close_contact/widgets/bottom_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:close_contact/firestore/user_maps.dart';
-import 'package:collection/collection.dart';
 
 class MyProfilePage extends StatefulWidget {
   User user;
   MyProfilePage(this.user, {Key? key}) : super(key: key);
 
   @override
-  State<MyProfilePage> createState() => Profile(user);
+  State<MyProfilePage> createState() => ProfilePageState(user);
 }
 
-class Profile extends State<MyProfilePage> {
+class ProfilePageState extends State<MyProfilePage> {
   final _formKey = new GlobalKey<FormState>();
   String _faculty = "";
   String _year = "";
   String _activityString = "";
   static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
-
   String imageUrl = " ";
-
-  Profile(this.user);
+  String _gender = "Gender";
+  String _area = "Area";
+  ProfilePageState(this.user);
   User user;
 
   Future<void> setControllers() async {
-    var bio = await InfoGetter.bioGetter(user: user);
+    var bio = await InfoGetter.bioGetter(userID: user.uid);
     _bioController.text = bio;
-    var faculty = await InfoGetter.facultyGetter(user: user);
+    var area = await InfoGetter.areaGetter(userID: user.uid);
+    _areaController.text = area;
+    var gender = await InfoGetter.genderGetter(userID: user.uid);
+    _genderController.text = gender;
+    var faculty = await InfoGetter.facultyGetter(userID: user.uid);
     _facultyController.text = faculty;
     _faculty = faculty;
-    var year = await InfoGetter.yearGetter(user: user);
+    var year = await InfoGetter.yearGetter(userID: user.uid);
     _yearController.text = year;
     _year = year;
     imageUrl = await user.photoURL == null ? " " : user.photoURL as String;
-    var activities = await InfoGetter.activitiesGetter(user: user);
+    var activities = await InfoGetter.activitiesGetter(userID: user.uid);
+    _activityString = activities;
     _activities =
         activities.substring(1, activities.length - 1).split(",").map((x) {
       if (x[0] == " ") {
@@ -56,7 +56,8 @@ class Profile extends State<MyProfilePage> {
       return x;
     }).toList();
   }
-
+  TextEditingController _genderController = TextEditingController();
+  TextEditingController _areaController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
   TextEditingController _facultyController = TextEditingController();
   TextEditingController _yearController =
@@ -69,12 +70,12 @@ class Profile extends State<MyProfilePage> {
     _facultyController.text = "Please choose a faculty";
   }
 
-  _saveForm() {
-    var form = _formKey.currentState!;
-    if (form.validate()) {
-      form.save();
-    }
-  }
+  // _saveForm() {
+  //   var form = _formKey.currentState!;
+  //   if (form.validate()) {
+  //     form.save();
+  //   }
+  // }
 
   File? _image;
 
@@ -92,7 +93,6 @@ class Profile extends State<MyProfilePage> {
       setState(() {
         this._image = imageTemp;
         imageUrl = value;
-        print(imageUrl);
       });
     });
   }
@@ -140,9 +140,7 @@ class Profile extends State<MyProfilePage> {
                           avatarUrl: imageUrl == " "
                               ? 'https://picsum.photos/id/237/5000/5000'
                               : imageUrl,
-                          onAvatarTap: () {
-                            print("tapped");
-                          },
+                          onAvatarTap: () {},
                           avatarSplashColor: Colors.purple,
                           radius: 100,
                           isActivityIndicatorSmall: false,
@@ -241,6 +239,7 @@ class Profile extends State<MyProfilePage> {
                       Container(
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         child: TextFormField(
+                          maxLength: 100,
                           maxLines: null,
                           controller: _bioController,
                           validator: (value) =>
@@ -318,7 +317,6 @@ class Profile extends State<MyProfilePage> {
                           hintWidget: Text('Please select your interests'),
                           onSaved: (value) {
                             _activityString = value.toString();
-                            print(_activityString);
                             if (value == null) return;
                           },
                         ),
@@ -332,7 +330,86 @@ class Profile extends State<MyProfilePage> {
                       // ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.fromLTRB(15, 15, 0, 5),
+                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 5),
+                        child: Column(
+                          children: <Widget>[
+                            const Text('Gender ',
+                                style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: TextFormField(
+                          controller: _genderController,
+                          validator: (value) => Validator.validateYear(value),
+                          decoration: InputDecoration(
+                              suffixIcon: DropdownButtonFormField(
+                                hint: Text("Choose a gender",
+                                    style: TextStyle(color: Colors.black)),
+                                items: <String>[
+                                  'Male',
+                                  'Female',
+                                  'Other'
+                                ].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child:
+                                    Text(value, textAlign: TextAlign.right),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  _gender = value as String;
+                                },
+                              ),
+                              contentPadding:
+                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                        child: Column(
+                          children: <Widget>[
+                            const Text('Area',
+                                style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: TextFormField(
+                          controller: _areaController,
+                          validator: (value) => Validator.validateYear(value),
+                          decoration: InputDecoration(
+                              suffixIcon: DropdownButtonFormField(
+                                hint: Text("Choose your location",
+                                    style: TextStyle(color: Colors.black)),
+                                items: <String>[
+                                  'North',
+                                  'Northeast',
+                                  'East',
+                                  'West'
+                                ].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child:
+                                    Text(value, textAlign: TextAlign.right),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  _area = value as String;
+                                },
+                              ),
+                              contentPadding:
+                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
                         child: const Text(
                           'Faculty/Course of study ',
                           style: TextStyle(fontSize: 14),
@@ -350,9 +427,13 @@ class Profile extends State<MyProfilePage> {
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Computing',
-                                  'Fac2',
-                                  'Fac3',
-                                  'Fac4'
+                                  'FoS',
+                                  'FASS',
+                                  'Business',
+                                  'Law',
+                                  'Nursing',
+                                  'Medicine',
+                                  'Other'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -393,7 +474,8 @@ class Profile extends State<MyProfilePage> {
                                   'Year 2',
                                   'Year 3',
                                   'Year 4',
-                                  'Year 5'
+                                  'Year 5',
+                                  'Other'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -426,10 +508,14 @@ class Profile extends State<MyProfilePage> {
                                       _year,
                                       _activityString,
                                       _bioController.text,
+                                      _gender,
+                                      _area
                                     ),
                                   );
+                              db.collection("users").doc(user.uid).set(
+                                  {"imageURL": imageUrl},
+                                  SetOptions(merge: true));
                               user.updatePhotoURL(imageUrl);
-                              print(user.photoURL);
                             }
                           },
                         ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/authentication/fire_auth.dart';
 import 'package:close_contact/authentication/validator.dart';
-import 'package:close_contact/screens/home.dart';
 import 'package:close_contact/screens/register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -94,8 +93,8 @@ class SignIn extends StatelessWidget {
                       );
                       if (user != null) {
                         // disabled email verification for now,
-                        // if (!user.emailVerified) {
                         if (false) {
+                        // if (false) {
                           showAlertDialog(context);
                           await user.sendEmailVerification();
                         } else {
