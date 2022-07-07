@@ -137,7 +137,7 @@ class Register extends StatelessWidget {
                             context: _scaffoldKey.currentContext!,
                             builder: (dialogContext) => AlertDialog(
                                 content: Text(
-                                    'Failed to add user: Account already exists!')));
+                                    "Failed to add user: Account already exists!")));
                       }
                     }
                   },

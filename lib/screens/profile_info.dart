@@ -154,8 +154,13 @@ class ProfileInfo extends StatelessWidget {
                       ),
                       const SizedBox(width: 20),
                       ActionButtonWidget(
-                        onPressed: () {
-                          Navigator.of(context).pop();
+                        onPressed: () async {
+                          await InfoSetter.setCurrRequests(
+                              userid: user.uid,
+                              oldRequest: UID);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChatRequestPage(user)));
                         },
                         icon: const Icon(
                           Icons.close,

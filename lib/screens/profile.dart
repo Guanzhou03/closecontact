@@ -56,18 +56,16 @@ class ProfilePageState extends State<MyProfilePage> {
       return x;
     }).toList();
   }
-  TextEditingController _genderController = TextEditingController();
-  TextEditingController _areaController = TextEditingController();
-  TextEditingController _bioController = TextEditingController();
-  TextEditingController _facultyController = TextEditingController();
-  TextEditingController _yearController =
-      TextEditingController(text: "Please choose your year of study");
+  TextEditingController _genderController = TextEditingController(text: "Choose a gender");
+  TextEditingController _areaController = TextEditingController(text: "Choose your area");
+  TextEditingController _bioController = TextEditingController(text: "Add a bio");
+  TextEditingController _facultyController = TextEditingController(text: "Add your faculty");
+  TextEditingController _yearController = TextEditingController(text: "Please choose your year of study");
 
   @override
   void initState() {
     super.initState();
     _future = setControllers();
-    _facultyController.text = "Please choose a faculty";
   }
 
   // _saveForm() {
@@ -345,7 +343,7 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text("Choose a gender",
+                                hint: Text(_genderController.text,
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Male',
@@ -384,7 +382,7 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text("Choose your location",
+                                hint: Text(_areaController.text,
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'North',
