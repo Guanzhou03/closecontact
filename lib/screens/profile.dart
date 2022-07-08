@@ -27,8 +27,8 @@ class ProfilePageState extends State<MyProfilePage> {
   static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
   String imageUrl = " ";
-  String _gender = "Gender";
-  String _area = "Area";
+  String _gender = "";
+  String _area = "";
   ProfilePageState(this.user);
   User user;
 
