@@ -37,8 +37,10 @@ class ProfilePageState extends State<MyProfilePage> {
     _bioController.text = bio;
     var area = await InfoGetter.areaGetter(userID: user.uid);
     _areaController.text = area;
+    _area = area;
     var gender = await InfoGetter.genderGetter(userID: user.uid);
     _genderController.text = gender;
+    _gender = gender;
     var faculty = await InfoGetter.facultyGetter(userID: user.uid);
     _facultyController.text = faculty;
     _faculty = faculty;
