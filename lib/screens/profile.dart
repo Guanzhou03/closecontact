@@ -280,6 +280,10 @@ class ProfilePageState extends State<MyProfilePage> {
                           },
                           dataSource: [
                             {
+                              "display": "Movies",
+                              "value": "Movies",
+                            },
+                            {
                               "display": "Running",
                               "value": "Running",
                             },
@@ -307,6 +311,22 @@ class ProfilePageState extends State<MyProfilePage> {
                               "display": "Football",
                               "value": "Football",
                             },
+                            {
+                              "display": "Basketball",
+                              "value": "Basketball",
+                            },
+                            {
+                              "display": "Badminton",
+                              "value": "Badminton",
+                            },
+                            {
+                              "display": "Anime/Manga",
+                              "value": "Anime/Manga",
+                            },
+                            {
+                              "display": "None of the above",
+                              "value": "None of the above",
+                            }
                           ],
                           textField: 'display',
                           valueField: 'value',
@@ -348,7 +368,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                 items: <String>[
                                   'Male',
                                   'Female',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -388,7 +409,9 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'North',
                                   'Northeast',
                                   'East',
-                                  'West'
+                                  'West',
+                                  'Central',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -431,7 +454,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'Law',
                                   'Nursing',
                                   'Medicine',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -473,7 +497,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'Year 3',
                                   'Year 4',
                                   'Year 5',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -511,7 +536,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                     ),
                                   );
                               db.collection("users").doc(user.uid).set(
-                                  {"imageURL": imageUrl},
+                                  {"imageURL": imageUrl != " " ? imageUrl : 'https://picsum.photos/id/237/5000/5000'},
                                   SetOptions(merge: true));
                               user.updatePhotoURL(imageUrl);
                             }
