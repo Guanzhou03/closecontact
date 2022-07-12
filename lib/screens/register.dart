@@ -110,7 +110,7 @@ class Register extends StatelessWidget {
                         if (user != null) {
                           await user.sendEmailVerification();
                           //add user into Cloud Firestore
-                          CollectionReference users = db.collection('users');
+                          CollectionReference users = await db.collection('users');
                           users
                               .doc(user.uid)
                               .set({
@@ -137,7 +137,7 @@ class Register extends StatelessWidget {
                             context: _scaffoldKey.currentContext!,
                             builder: (dialogContext) => AlertDialog(
                                 content: Text(
-                                    'Failed to add user: Account already exists!')));
+                                    "Failed to add user: Account already exists!")));
                       }
                     }
                   },

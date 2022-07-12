@@ -27,8 +27,8 @@ class ProfilePageState extends State<MyProfilePage> {
   static List<String> _activities = ["Running"];
   Future<void> _future = Future(() {});
   String imageUrl = " ";
-  String _gender = "Gender";
-  String _area = "Area";
+  String _gender = "";
+  String _area = "";
   ProfilePageState(this.user);
   User user;
 
@@ -37,8 +37,10 @@ class ProfilePageState extends State<MyProfilePage> {
     _bioController.text = bio;
     var area = await InfoGetter.areaGetter(userID: user.uid);
     _areaController.text = area;
+    _area = area;
     var gender = await InfoGetter.genderGetter(userID: user.uid);
     _genderController.text = gender;
+    _gender = gender;
     var faculty = await InfoGetter.facultyGetter(userID: user.uid);
     _facultyController.text = faculty;
     _faculty = faculty;
@@ -56,18 +58,16 @@ class ProfilePageState extends State<MyProfilePage> {
       return x;
     }).toList();
   }
-  TextEditingController _genderController = TextEditingController();
-  TextEditingController _areaController = TextEditingController();
-  TextEditingController _bioController = TextEditingController();
-  TextEditingController _facultyController = TextEditingController();
-  TextEditingController _yearController =
-      TextEditingController(text: "Please choose your year of study");
+  TextEditingController _genderController = TextEditingController(text: "Choose a gender");
+  TextEditingController _areaController = TextEditingController(text: "Choose your area");
+  TextEditingController _bioController = TextEditingController(text: "Add a bio");
+  TextEditingController _facultyController = TextEditingController(text: "Add your faculty");
+  TextEditingController _yearController = TextEditingController(text: "Please choose your year of study");
 
   @override
   void initState() {
     super.initState();
     _future = setControllers();
-    _facultyController.text = "Please choose a faculty";
   }
 
   // _saveForm() {
@@ -282,6 +282,10 @@ class ProfilePageState extends State<MyProfilePage> {
                           },
                           dataSource: [
                             {
+                              "display": "Movies",
+                              "value": "Movies",
+                            },
+                            {
                               "display": "Running",
                               "value": "Running",
                             },
@@ -309,6 +313,22 @@ class ProfilePageState extends State<MyProfilePage> {
                               "display": "Football",
                               "value": "Football",
                             },
+                            {
+                              "display": "Basketball",
+                              "value": "Basketball",
+                            },
+                            {
+                              "display": "Badminton",
+                              "value": "Badminton",
+                            },
+                            {
+                              "display": "Anime/Manga",
+                              "value": "Anime/Manga",
+                            },
+                            {
+                              "display": "None of the above",
+                              "value": "None of the above",
+                            }
                           ],
                           textField: 'display',
                           valueField: 'value',
@@ -345,12 +365,13 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text("Choose a gender",
+                                hint: Text(_genderController.text,
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'Male',
                                   'Female',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -384,13 +405,15 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text("Choose your location",
+                                hint: Text(_areaController.text,
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'North',
                                   'Northeast',
                                   'East',
-                                  'West'
+                                  'West',
+                                  'Central',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -433,7 +456,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'Law',
                                   'Nursing',
                                   'Medicine',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -475,7 +499,8 @@ class ProfilePageState extends State<MyProfilePage> {
                                   'Year 3',
                                   'Year 4',
                                   'Year 5',
-                                  'Other'
+                                  'Other',
+                                  'Prefer not to say'
                                 ].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
@@ -513,7 +538,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                     ),
                                   );
                               db.collection("users").doc(user.uid).set(
-                                  {"imageURL": imageUrl},
+                                  {"imageURL": imageUrl != " " ? imageUrl : 'https://picsum.photos/id/237/5000/5000'},
                                   SetOptions(merge: true));
                               user.updatePhotoURL(imageUrl);
                             }

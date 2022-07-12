@@ -37,11 +37,11 @@ class InfoGetter {
       return Future(() => _area);
     }
     await db.collection("users").doc(userID).get().then((value) => {
-      if (value.exists)
-        {
-          _area = value.data()?["area"] as String,
-        }
-    });
+          if (value.exists)
+            {
+              _area = value.data()?["area"] as String,
+            }
+        });
     return _area;
   }
 
@@ -52,11 +52,11 @@ class InfoGetter {
       return Future(() => _area);
     }
     await db.collection("users").doc(userID).get().then((value) => {
-      if (value.exists)
-        {
-          _area = value.data()?["gender"] as String,
-        }
-    });
+          if (value.exists)
+            {
+              _area = value.data()?["gender"] as String,
+            }
+        });
     return _area;
   }
 
@@ -177,7 +177,11 @@ class InfoGetter {
     var temp = await getValidUsers();
     var result = temp.map((e) {
       var userid = e["userid"];
+      var imageURL = e["imageURL"];
       if (user.uid == userid) {
+        return null;
+      }
+      if (imageURL == " ") {
         return null;
       }
       return e["userid"].toString();
