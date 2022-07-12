@@ -31,6 +31,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
     await auth.authStateChanges().listen((User? user) {
       _user = user;
     });
+
     var temp = await InfoGetter.cardStackCreator(user: _user);
     draggableItems = temp;
     print(temp);

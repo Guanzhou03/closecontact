@@ -1,3 +1,4 @@
+import 'package:close_contact/firestore/pref-filters.dart';
 import 'package:close_contact/widgets/profile_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -148,6 +149,12 @@ class InfoGetter {
   }
 
   static Future<List<Profile>> cardStackCreator({required user}) async {
+    var prefList = await prefGetter(userid: user.uid);
+    List<bool> genderList = List<bool>.from(prefList["gender"]);
+    List<bool> facultyList = List<bool>.from(prefList["faculty"]);
+    List<bool> yearList = List<bool>.from(prefList["year"]);
+    List<bool> areaList = List<bool>.from(prefList["area"]);
+    List<bool> interestList = List<bool>.from(prefList["interests"]);
     var temp = await getValidUsers();
     var result = await temp.map((e) {
       var uid = e["userid"];
@@ -162,6 +169,13 @@ class InfoGetter {
         photoURL = imageURL;
       }
       try {
+        if (prefList.isNotEmpty) {
+          if (PrefFilters.filterGender(e["gender"].toString(), genderList)) {
+            return Profile(
+                name: name, interests: interests, imageURL: photoURL);
+          }
+          return null;
+        }
         return Profile(name: name, interests: interests, imageURL: photoURL);
       } catch (e) {
         return Profile(
@@ -174,6 +188,12 @@ class InfoGetter {
   }
 
   static Future<List<String>> userIdListGetter({required user}) async {
+    var prefList = await prefGetter(userid: user.uid);
+    List<bool> genderList = List<bool>.from(prefList["gender"]);
+    List<bool> facultyList = List<bool>.from(prefList["faculty"]);
+    List<bool> yearList = List<bool>.from(prefList["year"]);
+    List<bool> areaList = List<bool>.from(prefList["area"]);
+    List<bool> interestList = List<bool>.from(prefList["interests"]);
     var temp = await getValidUsers();
     var result = temp.map((e) {
       var userid = e["userid"];
@@ -184,6 +204,14 @@ class InfoGetter {
       if (imageURL == " ") {
         return null;
       }
+
+      if (prefList.isNotEmpty) {
+        if (PrefFilters.filterGender(e["gender"].toString(), genderList)) {
+          return userid.toString();
+        }
+        return null;
+      }
+
       return e["userid"].toString();
     }).toList();
     return result.whereNotNull().toList();
@@ -203,5 +231,27 @@ class InfoGetter {
             }
         });
     return _currConvo;
+  }
+
+  static Future<Map<String, dynamic>> prefGetter({required userid}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Map<String, dynamic> _prefList = {};
+    if (userid == "") {
+      return Future(() => _prefList);
+    }
+    await db
+        .collection("users")
+        .doc(userid)
+        .collection("preferences")
+        .doc("preferences")
+        .get()
+        .then((value) {
+      if (value.exists) {
+        if (value.data() != null) {
+          _prefList = value.data()!;
+        }
+      }
+    });
+    return _prefList;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:close_contact/authentication/validator.dart';
 import 'package:close_contact/firestore/info-getter.dart';
+import 'package:close_contact/screens/set_filters_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class ProfilePageState extends State<MyProfilePage> {
       return x;
     }).toList();
   }
+
   TextEditingController _genderController = TextEditingController(text: "Choose a gender");
   TextEditingController _areaController = TextEditingController(text: "Choose your area");
   TextEditingController _bioController = TextEditingController(text: "Add a bio");
@@ -376,7 +378,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                    Text(value, textAlign: TextAlign.right),
+                                        Text(value, textAlign: TextAlign.right),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -384,7 +386,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                 },
                               ),
                               contentPadding:
-                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  const EdgeInsets.fromLTRB(10, 0, 0, 0),
                               border: OutlineInputBorder()),
                         ),
                       ),
@@ -393,8 +395,7 @@ class ProfilePageState extends State<MyProfilePage> {
                         padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
                         child: Column(
                           children: <Widget>[
-                            const Text('Area',
-                                style: TextStyle(fontSize: 14)),
+                            const Text('Area', style: TextStyle(fontSize: 14)),
                           ],
                         ),
                       ),
@@ -418,7 +419,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                    Text(value, textAlign: TextAlign.right),
+                                        Text(value, textAlign: TextAlign.right),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -426,7 +427,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                 },
                               ),
                               contentPadding:
-                              const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  const EdgeInsets.fromLTRB(10, 0, 0, 0),
                               border: OutlineInputBorder()),
                         ),
                       ),
@@ -529,19 +530,40 @@ class ProfilePageState extends State<MyProfilePage> {
                             if (_formKey.currentState!.validate()) {
                               db.collection("users").doc(user.uid).update(
                                     UserMaps.profileMap(
-                                      _faculty,
-                                      _year,
-                                      _activityString,
-                                      _bioController.text,
-                                      _gender,
-                                      _area
-                                    ),
+                                        _faculty,
+                                        _year,
+                                        _activityString,
+                                        _bioController.text,
+                                        _gender,
+                                        _area),
                                   );
-                              db.collection("users").doc(user.uid).set(
-                                  {"imageURL": imageUrl != " " ? imageUrl : 'https://picsum.photos/id/237/5000/5000'},
-                                  SetOptions(merge: true));
+                              db.collection("users").doc(user.uid).set({
+                                "imageURL": imageUrl != " "
+                                    ? imageUrl
+                                    : 'https://picsum.photos/id/237/5000/5000'
+                              }, SetOptions(merge: true));
+
                               user.updatePhotoURL(imageUrl);
                             }
+                          },
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
+                        height: 40,
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: ElevatedButton(
+                          child: const Text(
+                            'Set Your Preferences',
+                            textAlign: TextAlign.center,
+                          ),
+                          style: ElevatedButton.styleFrom(primary: Colors.blue),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      FilterScreen(this.user)),
+                            );
                           },
                         ),
                       ),
