@@ -204,12 +204,14 @@ class InfoGetter {
       if (imageURL == " ") {
         return null;
       }
+
       if (prefList.isNotEmpty) {
         if (PrefFilters.filterGender(e["gender"].toString(), genderList)) {
           return userid.toString();
         }
         return null;
       }
+
       return e["userid"].toString();
     }).toList();
     return result.whereNotNull().toList();

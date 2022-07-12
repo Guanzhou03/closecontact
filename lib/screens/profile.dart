@@ -60,16 +60,11 @@ class ProfilePageState extends State<MyProfilePage> {
     }).toList();
   }
 
-  TextEditingController _genderController =
-      TextEditingController(text: "Choose a gender");
-  TextEditingController _areaController =
-      TextEditingController(text: "Choose your area");
-  TextEditingController _bioController =
-      TextEditingController(text: "Add a bio");
-  TextEditingController _facultyController =
-      TextEditingController(text: "Add your faculty");
-  TextEditingController _yearController =
-      TextEditingController(text: "Please choose your year of study");
+  TextEditingController _genderController = TextEditingController(text: "Choose a gender");
+  TextEditingController _areaController = TextEditingController(text: "Choose your area");
+  TextEditingController _bioController = TextEditingController(text: "Add a bio");
+  TextEditingController _facultyController = TextEditingController(text: "Add your faculty");
+  TextEditingController _yearController = TextEditingController(text: "Please choose your year of study");
 
   @override
   void initState() {
@@ -547,6 +542,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                     ? imageUrl
                                     : 'https://picsum.photos/id/237/5000/5000'
                               }, SetOptions(merge: true));
+
                               user.updatePhotoURL(imageUrl);
                             }
                           },

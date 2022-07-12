@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/models/database.dart';
 import 'package:close_contact/models/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ntp/ntp.dart';
 
 class Chat extends StatefulWidget {
@@ -24,6 +29,7 @@ class _ChatState extends State<Chat> {
   Future<void> _future = Future(
     () {},
   );
+  String currImage = "";
 
   Widget chatMessages() {
     return StreamBuilder<QuerySnapshot>(
@@ -40,6 +46,7 @@ class _ChatState extends State<Chat> {
                       .data!.docs[snapshot.data!.docs.length - 1 - index]
                       .data()! as Map;
                   return MessageTile(
+                    messageType: temp["messageType"],
                     message: temp["message"],
                     sendByMe: temp["sendBy"] == myName,
                   );
@@ -58,6 +65,28 @@ class _ChatState extends State<Chat> {
         color: Color(0x54FFFFFF),
         child: Row(
           children: [
+            GestureDetector(
+              onTap: () async {
+                await getUploadImage();
+                addImage();
+              },
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: Colors.lightBlue,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
             Expanded(
                 child: TextField(
               controller: messageEditingController,
@@ -95,11 +124,48 @@ class _ChatState extends State<Chat> {
     );
   }
 
+  Future getUploadImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemp = File(image.path);
+    String uid = widget.me;
+    int time = DateTime.now().microsecondsSinceEpoch;
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("chatpics")
+        .child("$uid" + "$time" + ".jpg");
+    await ref.putFile(imageTemp);
+    await ref.getDownloadURL().then((value) {
+      setState(() {
+        currImage = value;
+      });
+    });
+  }
+
+  addImage() async {
+    if (currImage.isNotEmpty) {
+      DateTime startDate = new DateTime.now().toLocal();
+      int offset = await NTP.getNtpOffset(localTime: startDate);
+      Map<String, dynamic> chatMessageMap = {
+        "messageType": "Image",
+        "sendBy": myName,
+        "message": currImage,
+        'time': startDate.add(new Duration(milliseconds: offset)), //real time
+      };
+
+      DatabaseMethods().addMessage(widget.chatRoomId, chatMessageMap);
+      setState(() {
+        currImage = "";
+      });
+    }
+  }
+
   addMessage() async {
     if (messageEditingController.text.isNotEmpty) {
       DateTime startDate = new DateTime.now().toLocal();
       int offset = await NTP.getNtpOffset(localTime: startDate);
       Map<String, dynamic> chatMessageMap = {
+        "messageType": "Text",
         "sendBy": myName,
         "message": messageEditingController.text,
         'time': startDate.add(new Duration(milliseconds: offset)), //real time
@@ -146,9 +212,9 @@ class _ChatState extends State<Chat> {
                   children: [
                     Positioned(
                       bottom: 100,
-                      top:0,
-                      left:0,
-                      right:0,
+                      top: 0,
+                      left: 0,
+                      right: 0,
                       child: SizedBox(
                         width: 400,
                         child: chatMessages(),
@@ -168,8 +234,12 @@ class _ChatState extends State<Chat> {
 class MessageTile extends StatelessWidget {
   final String message;
   final bool sendByMe;
+  final String messageType;
 
-  MessageTile({required this.message, required this.sendByMe});
+  MessageTile(
+      {required this.messageType,
+      required this.message,
+      required this.sendByMe});
 
   @override
   Widget build(BuildContext context) {
@@ -198,13 +268,15 @@ class MessageTile extends StatelessWidget {
                         Color.fromARGB(255, 206, 211, 215),
                         Color.fromARGB(255, 103, 108, 108)
                       ])),
-        child: Text(message,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'OverpassRegular',
-                fontWeight: FontWeight.w300)),
+        child: messageType == "Image"
+            ? Image.network(message)
+            : Text(message,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontFamily: 'OverpassRegular',
+                    fontWeight: FontWeight.w300)),
       ),
     );
   }

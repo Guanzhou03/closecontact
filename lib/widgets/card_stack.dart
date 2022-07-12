@@ -34,8 +34,10 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
 
     var temp = await InfoGetter.cardStackCreator(user: _user);
     draggableItems = temp;
+    print(temp);
     var temp2 = await InfoGetter.userIdListGetter(user: _user);
     userIdList = temp2;
+    print(temp2);
   }
 
   static Future<void> removeLast() async {
@@ -248,6 +250,8 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                         List<String> currConvo =
                             await InfoGetter.currConvoGetter(
                                 userid: currUserId);
+                        print(currUserId);
+                        print(_user!.uid);
                         if (idList.isEmpty) {
                           if (currConvo.isEmpty ||
                               !currConvo.contains(_user!.uid)) {
