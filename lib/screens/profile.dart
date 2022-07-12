@@ -410,7 +410,7 @@ class ProfilePageState extends State<MyProfilePage> {
                                     style: TextStyle(color: Colors.black)),
                                 items: <String>[
                                   'North',
-                                  'Northeast',
+                                  'South',
                                   'East',
                                   'West',
                                   'Central',
