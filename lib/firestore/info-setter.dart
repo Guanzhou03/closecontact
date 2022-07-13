@@ -1,3 +1,4 @@
+import 'package:close_contact/firestore/info-getter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 
@@ -43,5 +44,50 @@ class InfoSetter {
         .whereNotNull()
         .toList();
     ref.set({"incoming": result}, SetOptions(merge: true));
+  }
+
+  static Future<bool> setRoomState(
+      {required String roomID}) async {
+    bool isBlocked = false;
+    String? initiator = "";
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var ref = await db
+        .collection("rooms")
+        .doc(roomID);
+    await ref.get().then((value) => {
+      if (value.exists)
+        {
+          isBlocked = value.data()?["isBlocked"] as bool,
+          initiator = value.data()?["initiator"] as String
+        }
+    });
+    await ref.set({"isBlocked": isBlocked}, SetOptions(merge: true));
+    await ref.set({"initiator": initiator}, SetOptions(merge: true));
+    return isBlocked;
+  }
+
+  static Future<void> toggleBlockedState(
+      {required String roomID, required String initiator}) async {
+    bool isBlocked = false;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var ref = await db
+        .collection("rooms")
+        .doc(roomID);
+    await ref.get().then((value) => {
+      if (value.exists)
+        {
+          isBlocked = value.data()?["isBlocked"] as bool
+        }
+    });
+    String blocker = await InfoGetter.blockerGetter(roomID: roomID);
+    if (isBlocked && (initiator == blocker|| blocker == "")) {
+      await ref.update({"isBlocked": false});
+      await ref.set({"initiator": ""}, SetOptions(merge: true));
+    }
+    else if (!isBlocked && (initiator == blocker|| blocker == "")) {
+      await ref.update({"isBlocked": true});
+      await ref.set({"initiator": initiator}, SetOptions(merge:true));
+      print("blocked");
+    }
   }
 }
