@@ -9,13 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CardsStackWidget extends StatefulWidget {
-  const CardsStackWidget({Key? key}) : super(key: key);
+  CardsStackWidget({Key? key}) : super(key: key);
 
   @override
-  State<CardsStackWidget> createState() => _CardsStackWidgetState();
+  State<CardsStackWidget> createState() => CardsStackWidgetState();
 }
 
-class _CardsStackWidgetState extends State<CardsStackWidget>
+class CardsStackWidgetState extends State<CardsStackWidget>
     with SingleTickerProviderStateMixin {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -27,17 +27,34 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
 
-  static Future<void> loadProfiles() async {
+  Future<void> checkForChanges() async {
+    await loadProfiles();
+    CollectionReference reference =
+        db.collection('users').doc(_user!.uid).collection("preferences");
+    reference.snapshots().listen((querySnapshot) {
+      querySnapshot.docChanges.forEach((change) {
+        loadProfiles();
+      });
+    });
+  }
+
+  Future<void> loadProfiles() async {
+    print("Profiles loaded");
     await auth.authStateChanges().listen((User? user) {
       _user = user;
     });
-
-    var temp = await InfoGetter.cardStackCreator(user: _user);
-    draggableItems = temp;
-    print(temp);
-    var temp2 = await InfoGetter.userIdListGetter(user: _user);
-    userIdList = temp2;
-    print(temp2);
+    try {
+      var temp = await InfoGetter.cardStackCreator(user: _user);
+      var temp2 = await InfoGetter.userIdListGetter(user: _user);
+      setState(() {
+        draggableItems = temp;
+        print(temp);
+        userIdList = temp2;
+        print(temp2);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<void> removeLast() async {
@@ -51,7 +68,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
 
   @override
   void initState() {
-    _future = loadProfiles();
+    _future = checkForChanges();
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),

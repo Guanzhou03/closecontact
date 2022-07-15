@@ -149,28 +149,42 @@ class InfoGetter {
   }
 
   static Future<List<Profile>> cardStackCreator({required user}) async {
+    print(user.uid);
     var prefList = await prefGetter(userid: user.uid);
-    List<bool> genderList = List<bool>.from(prefList["gender"]);
-    List<bool> facultyList = List<bool>.from(prefList["faculty"]);
-    List<bool> yearList = List<bool>.from(prefList["year"]);
-    List<bool> areaList = List<bool>.from(prefList["area"]);
-    List<bool> interestList = List<bool>.from(prefList["interests"]);
+    List<bool> genderList = [];
+    List<bool> facultyList = [];
+    List<bool> yearList = [];
+    List<bool> areaList = [];
+    List<bool> interestList = [];
+    if (prefList.isNotEmpty) {
+      genderList = List<bool>.from(prefList["gender"]);
+      facultyList = List<bool>.from(prefList["faculty"]);
+      yearList = List<bool>.from(prefList["year"]);
+      areaList = List<bool>.from(prefList["area"]);
+      interestList = List<bool>.from(prefList["interests"]);
+    }
     var temp = await getValidUsers();
     var result = await temp.map((e) {
       var uid = e["userid"];
+      print(uid);
       var name = e["Name"];
       var interests = e["activities"];
       var imageURL = e["imageURL"];
       late String photoURL;
-      if (uid == user.uid) return null;
-      if (imageURL == " ") {
-        return null;
-      } else {
-        photoURL = imageURL;
-      }
       try {
+        if (uid == user.uid) return null;
+        if (imageURL == " ") {
+          return null;
+        } else {
+          photoURL = imageURL;
+        }
+
         if (prefList.isNotEmpty) {
-          if (PrefFilters.filterGender(e["gender"].toString(), genderList)) {
+          if (PrefFilters.filterGender(e["gender"].toString(), genderList) &&
+              PrefFilters.filterFaculty(e["faculty"].toString(), facultyList) &&
+              PrefFilters.filterYear(e["year"].toString(), yearList) &&
+              PrefFilters.filterArea(e["area"].toString(), areaList) &&
+              PrefFilters.filterInterests(interests.toString(), interestList)) {
             return Profile(
                 name: name, interests: interests, imageURL: photoURL);
           }
@@ -178,6 +192,7 @@ class InfoGetter {
         }
         return Profile(name: name, interests: interests, imageURL: photoURL);
       } catch (e) {
+        print(e);
         return Profile(
             name: name,
             interests: 'ERROR',
@@ -189,30 +204,48 @@ class InfoGetter {
 
   static Future<List<String>> userIdListGetter({required user}) async {
     var prefList = await prefGetter(userid: user.uid);
-    List<bool> genderList = List<bool>.from(prefList["gender"]);
-    List<bool> facultyList = List<bool>.from(prefList["faculty"]);
-    List<bool> yearList = List<bool>.from(prefList["year"]);
-    List<bool> areaList = List<bool>.from(prefList["area"]);
-    List<bool> interestList = List<bool>.from(prefList["interests"]);
+    List<bool> genderList = [];
+    List<bool> facultyList = [];
+    List<bool> yearList = [];
+    List<bool> areaList = [];
+    List<bool> interestList = [];
+    if (prefList.isNotEmpty) {
+      genderList = List<bool>.from(prefList["gender"]);
+      facultyList = List<bool>.from(prefList["faculty"]);
+      yearList = List<bool>.from(prefList["year"]);
+      areaList = List<bool>.from(prefList["area"]);
+      interestList = List<bool>.from(prefList["interests"]);
+    }
     var temp = await getValidUsers();
-    var result = temp.map((e) {
-      var userid = e["userid"];
+    var result = await temp.map((e) {
+      var uid = e["userid"];
+      var name = e["Name"];
+      var interests = e["activities"];
       var imageURL = e["imageURL"];
-      if (user.uid == userid) {
-        return null;
-      }
-      if (imageURL == " ") {
-        return null;
-      }
-
-      if (prefList.isNotEmpty) {
-        if (PrefFilters.filterGender(e["gender"].toString(), genderList)) {
-          return userid.toString();
+      late String photoURL;
+      try {
+        if (uid == user.uid) return null;
+        if (imageURL == " ") {
+          return null;
+        } else {
+          photoURL = imageURL;
         }
-        return null;
-      }
 
-      return e["userid"].toString();
+        if (prefList.isNotEmpty) {
+          if (PrefFilters.filterGender(e["gender"].toString(), genderList) &&
+              PrefFilters.filterFaculty(e["faculty"].toString(), facultyList) &&
+              PrefFilters.filterYear(e["year"].toString(), yearList) &&
+              PrefFilters.filterArea(e["area"].toString(), areaList) &&
+              PrefFilters.filterInterests(interests.toString(), interestList)) {
+            return uid.toString();
+          }
+          return null;
+        }
+        return uid.toString();
+      } catch (e) {
+        print(e);
+        return "ERROR";
+      }
     }).toList();
     return result.whereNotNull().toList();
   }

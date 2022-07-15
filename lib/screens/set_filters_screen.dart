@@ -1,5 +1,6 @@
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/screens/profile.dart';
+import 'package:close_contact/widgets/card_stack.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,8 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   initState() {
+    print(widget.user.uid);
+    super.initState();
     _future = initialise();
   }
 
@@ -174,7 +177,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 Row(
                   children: [
                     onOffButton(_area, 0, "North"),
-                    onOffButton(_area, 1, "Northeast"),
+                    onOffButton(_area, 1, "South"),
                     onOffButton(_area, 2, "East"),
                     onOffButton(_area, 3, "West"),
                     onOffButton(_area, 4, "Central"),
@@ -211,8 +214,8 @@ class _FilterScreenState extends State<FilterScreen> {
                   child: ElevatedButton(
                     child: const Text('Save Info'),
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {
-                      db
+                    onPressed: () async {
+                      await db
                           .collection("users")
                           .doc(widget.user.uid)
                           .collection("preferences")
