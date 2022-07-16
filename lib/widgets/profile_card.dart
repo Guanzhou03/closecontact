@@ -5,10 +5,12 @@ class Profile {
     required this.name,
     required this.interests,
     required this.imageURL,
+    required this.userid,
   });
   final String name;
   final String interests;
   final String imageURL;
+  final String userid;
 }
 
 class ProfileCard extends StatelessWidget {

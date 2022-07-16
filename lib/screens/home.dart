@@ -11,7 +11,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("Find Close Contacts")),
+      appBar: AppBar(
+        title: const Text("Find Close Contacts"),
+      ),
       body: Stack(fit: StackFit.loose, children: [
         BackgroudCurveWidget(),
         CardsStackWidget(),
