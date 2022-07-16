@@ -15,41 +15,32 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   //index 0 = Male, index 1 = Female, index 2 = Other
-  static List<bool> _gender = [false, false, false];
+  static List<bool> _gender = [true, true, true];
   //index 0 = Computing, index 1 = FoS, index 2 = FASS, index 3 = Business
   //index 4 = Law, index 5 = Nursing, index 6 = Medicine, index 7 = Other
-  static List<bool> _faculty = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  static List<bool> _faculty = [true, true, true, true, true, true, true, true];
   //index 0 = Year 1, index 1 = Year 2, index 2 = Year 3, index 3 = Year 4
   //index 4 = Year 5, index 5 = Other
-  static List<bool> _year = [false, false, false, false, false, false];
+  static List<bool> _year = [true, true, true, true, true, true];
   //index 0 = North, index 1 = Northeast, index 2 = East, index 3 = West
   //index 4 = Central
-  static List<bool> _area = [false, false, false, false, false];
+  static List<bool> _area = [true, true, true, true, true];
   //[0 - Movies, 1 - Running, 2 - Climbing, 3 - Chess, 4 - Swimming,
   //5 - Music, 6 - Mahjong, 7 - Football, 8 - Basketball, 9 - Badminton,
   //10 - Anime/Manga, 11 - None of the Above]
   static List<bool> _interests = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
   ];
   FirebaseFirestore db = FirebaseFirestore.instance;
   Future<void> _future = Future(() {});

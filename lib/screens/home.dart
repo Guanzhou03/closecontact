@@ -13,15 +13,6 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Find Close Contacts"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // CardsStackWidgetState.loadProfiles();
-            },
-            icon: Icon(Icons.refresh),
-            tooltip: "Refresh your swipe card",
-          )
-        ],
       ),
       body: Stack(fit: StackFit.loose, children: [
         BackgroudCurveWidget(),
