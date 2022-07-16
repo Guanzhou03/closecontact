@@ -250,7 +250,9 @@ class _ChatState extends State<Chat> {
         var initiator = await InfoGetter.blockerGetter(roomID: widget.chatRoomId);
         if (widget.me == initiator || initiator == "") {
           await InfoSetter.toggleBlockedState(roomID: widget.chatRoomId, initiator: widget.me);
-          isBlocked = isBlocked == true ? false : true;
+          setState(() {
+            isBlocked = isBlocked == true ? false : true;
+          });
           showDialog(context: context, builder: (context) => AlertDialog(content: Text("Blocked/Unblocked successfully")));
         }
         else {
