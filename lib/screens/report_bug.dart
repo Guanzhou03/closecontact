@@ -2,12 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-
 import 'home.dart';
 
-class ReportBugPage extends StatelessWidget {
+class ReportBugPage extends StatefulWidget{
   final User user;
   ReportBugPage(this.user, {Key? key}) : super(key: key);
+
+  @override
+  State<ReportBugPage> createState() => ReportBug(user);
+}
+
+class ReportBug extends State<ReportBugPage> {
+  final User user;
+  ReportBug(this.user);
   TextEditingController _issueController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   CollectionReference feedbackCollection = FirebaseFirestore.instance.collection('feedback');
@@ -55,7 +62,6 @@ class ReportBugPage extends StatelessWidget {
                   'Feedback',
                   'Other'
                 ].map((String value) {
-                  _issueController.text = value;
                   return DropdownMenuItem<String>(
                     value: value,
                     child:
@@ -64,6 +70,7 @@ class ReportBugPage extends StatelessWidget {
                 }).toList(),
                 onChanged: (value) {
                   _issueController.text = value as String;
+                  print(_issueController.text);
                 },
               ),
               contentPadding:
@@ -101,6 +108,7 @@ class ReportBugPage extends StatelessWidget {
           child: const Text('Submit form'),
           style: ElevatedButton.styleFrom(primary: Colors.blue),
           onPressed: () {
+            print(_issueController.text);
             feedbackCollection.add({
               'type': _issueController.text,
               'description': _descriptionController.text
