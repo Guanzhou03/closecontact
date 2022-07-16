@@ -12,6 +12,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(title: const Text("Find Close Contacts"), actions: [
         ElevatedButton.icon(icon: Icon(Icons.report), label: Text("Report a bug"),
     style: ElevatedButton.styleFrom(primary: Colors.redAccent),
@@ -21,6 +22,7 @@ class Home extends StatelessWidget {
             builder: (context) => ReportBugPage(this.user)),
       );
     })],),
+
       body: Stack(fit: StackFit.loose, children: [
         BackgroudCurveWidget(),
         CardsStackWidget(),

@@ -1,4 +1,6 @@
+import 'package:close_contact/algorithm/recommendation-algo.dart';
 import 'package:close_contact/firestore/info-getter.dart';
+import 'package:close_contact/firestore/info-setter.dart';
 import 'package:close_contact/firestore/user_maps.dart';
 import 'package:close_contact/screens/home.dart';
 import 'package:close_contact/widgets/profile_card.dart';
@@ -9,35 +11,62 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CardsStackWidget extends StatefulWidget {
-  const CardsStackWidget({Key? key}) : super(key: key);
+  CardsStackWidget({Key? key}) : super(key: key);
 
   @override
-  State<CardsStackWidget> createState() => _CardsStackWidgetState();
+  State<CardsStackWidget> createState() => CardsStackWidgetState();
 }
 
-class _CardsStackWidgetState extends State<CardsStackWidget>
+class CardsStackWidgetState extends State<CardsStackWidget>
     with SingleTickerProviderStateMixin {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static User? _user = FirebaseAuth.instance.currentUser;
   static List<Profile> draggableItems = [];
   static List<String> userIdList = [];
+  static List<String> _seenUsers = [];
   Future<void> _future = Future(() {});
 
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
 
-  static Future<void> loadProfiles() async {
+  Future<void> checkForChanges() async {
+    await loadProfiles();
+    DocumentReference userInterests = db.collection('users').doc(_user!.uid);
+    userInterests.snapshots().listen((querySnapshot) {
+      loadProfiles();
+    });
+    CollectionReference userPreferences =
+        db.collection('users').doc(_user!.uid).collection("preferences");
+    userPreferences.snapshots().listen((querySnapshot) {
+      querySnapshot.docChanges.forEach((change) {
+        loadProfiles();
+      });
+    });
+  }
+
+  Future<void> loadProfiles() async {
+    print("Profiles loaded");
     await auth.authStateChanges().listen((User? user) {
       _user = user;
     });
-
-    var temp = await InfoGetter.cardStackCreator(user: _user);
-    draggableItems = temp;
-    print(temp);
-    var temp2 = await InfoGetter.userIdListGetter(user: _user);
-    userIdList = temp2;
-    print(temp2);
+    try {
+      var temp = await InfoGetter.cardStackCreator(user: _user);
+      var seenUsers = await InfoGetter.seenUsersGetter(userID: _user!.uid);
+      print("seen users are: " + seenUsers.toString());
+      var temp1 =
+          await RecommendationAlgo().sortProfiles(temp, _user!, seenUsers);
+      var temp2 = await InfoGetter.userIdListGetter(profileList: temp1);
+      setState(() {
+        draggableItems = temp1;
+        _seenUsers = seenUsers;
+        print(temp1);
+        userIdList = temp2;
+        print(temp2);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<void> removeLast() async {
@@ -51,7 +80,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
 
   @override
   void initState() {
-    _future = loadProfiles();
+    _future = checkForChanges();
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -190,7 +219,11 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                         ),
                       );
                     },
-                    onAccept: (int index) {
+                    onAccept: (int index) async {
+                      await InfoSetter.setSeenUsers(
+                          currUser: _user!.uid,
+                          userid: userIdList[index],
+                          seenUsers: _seenUsers);
                       setState(() {
                         removeLast();
                         //draggableItems.removeAt(index);
@@ -216,6 +249,10 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                     },
                     onAccept: (int index) async {
                       var currUserId = userIdList[index];
+                      await InfoSetter.setSeenUsers(
+                          currUser: _user!.uid,
+                          userid: currUserId,
+                          seenUsers: _seenUsers);
                       var snapshot = await db
                           .collection("users")
                           .doc(currUserId)
@@ -256,7 +293,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                           if (currConvo.isEmpty ||
                               !currConvo.contains(_user!.uid)) {
                             snapshot.set({
-                              "incoming": [_user!.uid]
+                              "incoming": [_user!.uid],
                             });
                           }
                         } else {

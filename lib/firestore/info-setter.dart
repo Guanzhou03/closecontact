@@ -46,6 +46,7 @@ class InfoSetter {
     ref.set({"incoming": result}, SetOptions(merge: true));
   }
 
+
   static Future<bool> setRoomState(
       {required String roomID}) async {
     bool isBlocked = false;
@@ -88,6 +89,26 @@ class InfoSetter {
       await ref.update({"isBlocked": true});
       await ref.set({"initiator": initiator}, SetOptions(merge:true));
       print("blocked");
+     }
+    }
+
+  static Future<void> setSeenUsers(
+      {required String currUser,
+      required String userid,
+      required List<String> seenUsers}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var temp = await db.collection("users").doc(currUser);
+    var bool = await temp
+        .get()
+        .then((value) => value.data()!.containsKey("seenUsers"));
+    if (!bool) {
+      temp.set({
+        "seenUsers": [userid]
+      }, SetOptions(merge: true));
+    } else {
+      seenUsers.add(userid);
+      temp.update({"seenUsers": seenUsers});
+
     }
   }
 }
