@@ -16,6 +16,20 @@ class InfoGetter {
     return result == null ? [] : List<String>.from(result);
   }
 
+  static Future<bool> blockedStatusGetter({required String roomID}) async {
+    bool isBlocked = false;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var ref = await db.collection("rooms").doc(roomID);
+    await ref.get().then((value) => {
+      if (value.exists)
+        {
+          isBlocked = value.data()?["isBlocked"] as bool,
+        }
+    });
+    return isBlocked;
+  }
+
+
   static Future<String> bioGetter({required String userID}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String _bio = "Add a bio";

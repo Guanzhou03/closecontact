@@ -213,7 +213,7 @@ class _ChatState extends State<Chat> {
 
   void assignBlockState() async {
     print("state changed");
-    isBlocked = await InfoSetter.setRoomState(roomID: widget.chatRoomId);
+    isBlocked = await InfoGetter.blockedStatusGetter(roomID: widget.chatRoomId);
   }
 
   Future<void> initialise() async {
