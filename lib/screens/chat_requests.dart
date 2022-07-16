@@ -106,7 +106,7 @@ class ChatRequest extends State<ChatRequestPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
             leading: BackButton(
-                onPressed: () => Navigator.push(
+                onPressed: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ChatsHome(user)),
                     )),

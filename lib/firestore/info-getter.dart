@@ -31,6 +31,18 @@ class InfoGetter {
     return _bio;
   }
 
+  static Future<String> blockerGetter({required String roomID}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String _blocker = "";
+    await db.collection("rooms").doc(roomID).get().then((value) => {
+      if (value.exists)
+        {
+          _blocker = value.data()?["initiator"] as String,
+        }
+    });
+    return _blocker;
+  }
+
   static Future<String> areaGetter({required String userID}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     String _area = "Add your location";

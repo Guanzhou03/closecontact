@@ -105,8 +105,7 @@ class ProfilePageState extends State<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.amber[50],
         body: Padding(
@@ -596,7 +595,6 @@ class ProfilePageState extends State<MyProfilePage> {
             ),
           ),
         ),
-      ),
     );
   }
 }
