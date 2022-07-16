@@ -107,10 +107,13 @@ class _ChatState extends State<Chat> {
             GestureDetector(
               onTap: () {
                 if (!isBlocked)
-                addMessage();
+                  addMessage();
                 else {
                   print(isBlocked);
-                  showDialog(context: context, builder: (context) => AlertDialog(content: Text("Unable to send message: Blocked")));
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                          content: Text("Unable to send message: Blocked")));
                 }
               },
               child: Container(
@@ -190,7 +193,9 @@ class _ChatState extends State<Chat> {
   }
 
   addAdminMessage() async {
-    messageEditingController.text = "You have reported user with userID " + widget.other + ".\n Kindly explain the issue";
+    messageEditingController.text = "You have reported user with userID " +
+        widget.other +
+        ".\n Kindly explain the issue";
     DateTime startDate = new DateTime.now().toLocal();
     int offset = await NTP.getNtpOffset(localTime: startDate);
     Map<String, dynamic> chatMessageMap = {
@@ -199,18 +204,29 @@ class _ChatState extends State<Chat> {
       "message": messageEditingController.text,
       'time': startDate.add(new Duration(milliseconds: offset)), //real time
     };
-      DatabaseMethods().addMessage(maptoRoomID(adminID), chatMessageMap);
+    DatabaseMethods().addMessage(maptoRoomID(adminID), chatMessageMap);
 
-      setState(() {
-        messageEditingController.text = "";
-      });
+    setState(() {
+      messageEditingController.text = "";
+    });
+  }
 
+  void assignBlockState() async {
+    print("state changed");
+    isBlocked = await InfoSetter.setRoomState(roomID: widget.chatRoomId);
   }
 
   Future<void> initialise() async {
     myName = await InfoGetter.nameGetter(userID: widget.me);
     otherName = await InfoGetter.nameGetter(userID: widget.other);
     isBlocked = await InfoSetter.setRoomState(roomID: widget.chatRoomId);
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference reference = db.collection("rooms").doc(widget.chatRoomId);
+    reference.snapshots().listen((querySnapshot) async {
+      setState(() {
+        assignBlockState();
+      });
+    });
   }
 
   @override
@@ -229,37 +245,38 @@ class _ChatState extends State<Chat> {
   }
 
   void handleClick(String value) async {
-      if (value == 'Report user') {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Chat(
-              chatRoomId: maptoRoomID(adminID),
-              me: widget.me,
-              other: adminID,
-            ),
-          ));
-        await InfoSetter.setCurrConvo(
-            userid: widget.me,
-            newConvo: adminID);
-        await InfoSetter.setCurrConvo(
-            userid: adminID,
-            newConvo: widget.me);
-        await addAdminMessage();
+    if (value == 'Report user') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Chat(
+          chatRoomId: maptoRoomID(adminID),
+          me: widget.me,
+          other: adminID,
+        ),
+      ));
+      await InfoSetter.setCurrConvo(userid: widget.me, newConvo: adminID);
+      await InfoSetter.setCurrConvo(userid: adminID, newConvo: widget.me);
+      await addAdminMessage();
+    } else if (value == "Block/Unblock user") {
+      var initiator = await InfoGetter.blockerGetter(roomID: widget.chatRoomId);
+      if (widget.me == initiator || initiator == "") {
+        await InfoSetter.toggleBlockedState(
+            roomID: widget.chatRoomId, initiator: widget.me);
+        setState(() {
+          isBlocked = !isBlocked;
+        });
+        showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(content: Text("Blocked/Unblocked successfully")));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(content: Text("You are already blocked")));
       }
-      else if (value == "Block/Unblock user"){
-        var initiator = await InfoGetter.blockerGetter(roomID: widget.chatRoomId);
-        if (widget.me == initiator || initiator == "") {
-          await InfoSetter.toggleBlockedState(roomID: widget.chatRoomId, initiator: widget.me);
-          setState(() {
-            isBlocked = isBlocked == true ? false : true;
-          });
-          showDialog(context: context, builder: (context) => AlertDialog(content: Text("Blocked/Unblocked successfully")));
-        }
-        else {
-          showDialog(context: context, builder: (context) => AlertDialog(content: Text("You are already blocked")));
-        }
-      }
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -275,7 +292,8 @@ class _ChatState extends State<Chat> {
                 PopupMenuButton<String>(
                   onSelected: handleClick,
                   itemBuilder: (BuildContext context) {
-                    return {'Report user', "Block/Unblock user"}.map((String choice) {
+                    return {'Report user', "Block/Unblock user"}
+                        .map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
                         child: Text(choice),
