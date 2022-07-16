@@ -1,6 +1,5 @@
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/screens/profile.dart';
-import 'package:close_contact/widgets/card_stack.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
