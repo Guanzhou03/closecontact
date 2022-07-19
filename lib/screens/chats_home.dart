@@ -86,7 +86,7 @@ class ChatsHome extends StatelessWidget {
               ),
               child: Container(
                 //feel free to edit decorations
-                child: RecentChats(this.user,
+                child: RecentChatsPage(this.user,
                     currConversations), //user we need to retrieve from database
               ),
             ),
