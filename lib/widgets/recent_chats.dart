@@ -46,8 +46,11 @@ class RecentChats extends State<RecentChatsPage> {
     await reference.delete(); //delete that room
     bool res = otherUserCurrConversations.remove(user.uid);
     dynamic res2 = currConversations.removeAt(index);
-    await ref.doc(otherUserID).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
-    await ref.doc(user.uid).set({"currConvo": currConversations}, SetOptions(merge: true));
+    setState(() async{
+      await ref.doc(otherUserID).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
+      await ref.doc(user.uid).set({"currConvo": currConversations}, SetOptions(merge: true));
+    });
+
     return;
   }
 
@@ -59,6 +62,7 @@ class RecentChats extends State<RecentChatsPage> {
         setState(() {
           deleteChat(index);
         });
+        Navigator.of(context, rootNavigator: true).pop();
       },
     );
     Widget cancelButton = TextButton(
