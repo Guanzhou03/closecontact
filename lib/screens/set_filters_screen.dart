@@ -125,102 +125,128 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
               ),
             ),
-            body: Column(
-              children: <Widget>[
-                Row(
-                  children: [
-                    onOffButton(_gender, 0, "Male"),
-                    onOffButton(_gender, 1, "Female"),
-                    onOffButton(_gender, 2, "Other"),
-                  ],
+            body: Container(
+              constraints: BoxConstraints.expand(),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/logo_transparent2.png"),
                 ),
-                Row(
-                  children: [
-                    onOffButton(_faculty, 0, "Computing"),
-                    onOffButton(_faculty, 1, "FoS"),
-                    onOffButton(_faculty, 2, "FASS"),
-                    onOffButton(_faculty, 3, "Business"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_faculty, 4, "Law"),
-                    onOffButton(_faculty, 5, "Nursing"),
-                    onOffButton(_faculty, 6, "Medicine"),
-                    onOffButton(_faculty, 7, "Other"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_year, 0, "Year 1"),
-                    onOffButton(_year, 1, "Year 2"),
-                    onOffButton(_year, 2, "Year 3"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_year, 3, "Year 4"),
-                    onOffButton(_year, 4, "Year 5"),
-                    onOffButton(_year, 5, "Other"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_area, 0, "North"),
-                    onOffButton(_area, 1, "South"),
-                    onOffButton(_area, 2, "East"),
-                    onOffButton(_area, 3, "West"),
-                    onOffButton(_area, 4, "Central"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_interests, 0, "Movies"),
-                    onOffButton(_interests, 1, "Running"),
-                    onOffButton(_interests, 2, "Climbing"),
-                    onOffButton(_interests, 3, "Chess"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_interests, 4, "Swimming"),
-                    onOffButton(_interests, 5, "Music"),
-                    onOffButton(_interests, 6, "Mahjong"),
-                    onOffButton(_interests, 7, "Football"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    onOffButton(_interests, 8, "Basketball"),
-                    onOffButton(_interests, 9, "Badminton"),
-                    onOffButton(_interests, 10, "Anime/Manga"),
-                    onOffButton(_interests, 11, "None"),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
-                  height: 40,
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: ElevatedButton(
-                    child: const Text('Save Info'),
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () async {
-                      await db
-                          .collection("users")
-                          .doc(widget.user.uid)
-                          .collection("preferences")
-                          .doc("preferences")
-                          .set({
-                        "gender": _gender,
-                        "faculty": _faculty,
-                        "year": _year,
-                        "area": _area,
-                        "interests": _interests
-                      });
-                    },
+              ),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "Select all that apply",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-                ),
-              ],
+                  Text("Gender"),
+                  Row(
+                    children: [
+                      onOffButton(_gender, 0, "Male"),
+                      onOffButton(_gender, 1, "Female"),
+                      onOffButton(_gender, 2, "Other"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Text("Faculty"),
+                  Row(
+                    children: [
+                      onOffButton(_faculty, 0, "Computing"),
+                      onOffButton(_faculty, 1, "FoS"),
+                      onOffButton(_faculty, 2, "FASS"),
+                      onOffButton(_faculty, 3, "Business"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Row(
+                    children: [
+                      onOffButton(_faculty, 4, "Law"),
+                      onOffButton(_faculty, 5, "Nursing"),
+                      onOffButton(_faculty, 6, "Medicine"),
+                      onOffButton(_faculty, 7, "Other"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Text("Year"),
+                  Row(
+                    children: [
+                      onOffButton(_year, 0, "Year 1"),
+                      onOffButton(_year, 1, "Year 2"),
+                      onOffButton(_year, 2, "Year 3"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Row(
+                    children: [
+                      onOffButton(_year, 3, "Year 4"),
+                      onOffButton(_year, 4, "Year 5"),
+                      onOffButton(_year, 5, "Other"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Text("Area"),
+                  Row(
+                    children: [
+                      onOffButton(_area, 0, "North"),
+                      onOffButton(_area, 1, "South"),
+                      onOffButton(_area, 2, "East"),
+                      onOffButton(_area, 3, "West"),
+                      onOffButton(_area, 4, "Central"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Text("Interests"),
+                  Row(
+                    children: [
+                      onOffButton(_interests, 0, "Movies"),
+                      onOffButton(_interests, 1, "Running"),
+                      onOffButton(_interests, 2, "Climbing"),
+                      onOffButton(_interests, 3, "Chess"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Row(
+                    children: [
+                      onOffButton(_interests, 4, "Swimming"),
+                      onOffButton(_interests, 5, "Music"),
+                      onOffButton(_interests, 6, "Mahjong"),
+                      onOffButton(_interests, 7, "Football"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Row(
+                    children: [
+                      onOffButton(_interests, 8, "Basketball"),
+                      onOffButton(_interests, 9, "Badminton"),
+                      onOffButton(_interests, 10, "Anime/Manga"),
+                      onOffButton(_interests, 11, "None"),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
+                    height: 40,
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: ElevatedButton(
+                      child: const Text('Save Info'),
+                      style: ElevatedButton.styleFrom(primary: Colors.blue),
+                      onPressed: () async {
+                        await db
+                            .collection("users")
+                            .doc(widget.user.uid)
+                            .collection("preferences")
+                            .doc("preferences")
+                            .set({
+                          "gender": _gender,
+                          "faculty": _faculty,
+                          "year": _year,
+                          "area": _area,
+                          "interests": _interests
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
