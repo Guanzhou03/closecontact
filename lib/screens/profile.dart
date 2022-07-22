@@ -366,8 +366,10 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_genderController.text,
-                                    style: TextStyle(color: Colors.black)),
+                                hint: Container( //apply margin and padding using Container Widget.
+                                  padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                  child: Text(_genderController.text, style: TextStyle(color: Colors.black)),
+                                ),
                                 items: <String>[
                                   'Male',
                                   'Female',
@@ -377,7 +379,10 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                        Text(value, textAlign: TextAlign.right),
+                                    Container( //apply margin and padding using Container Widget.
+                                      padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                      child: Text(value),
+                                    )
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -405,8 +410,10 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_areaController.text,
-                                    style: TextStyle(color: Colors.black)),
+                                hint: Container( //apply margin and padding using Container Widget.
+                                  padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                  child: Text(_areaController.text, style: TextStyle(color: Colors.black))
+                                ),
                                 items: <String>[
                                   'North',
                                   'South',
@@ -418,7 +425,10 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                        Text(value, textAlign: TextAlign.right),
+                                    Container( //apply margin and padding using Container Widget.
+                                      padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                      child: Text(value),
+                                    )
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -446,8 +456,10 @@ class ProfilePageState extends State<MyProfilePage> {
                               Validator.validateFaculty(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_facultyController.text,
-                                    style: TextStyle(color: Colors.black)),
+                                hint: Container( //apply margin and padding using Container Widget.
+                                  padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                  child: Text(_facultyController.text, style: TextStyle(color: Colors.black)),
+                                ),
                                 items: <String>[
                                   'Computing',
                                   'FoS',
@@ -462,7 +474,10 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                        Text(value, textAlign: TextAlign.right),
+                                    Container( //apply margin and padding using Container Widget.
+                                      padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                      child: Text(value),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -491,8 +506,10 @@ class ProfilePageState extends State<MyProfilePage> {
                           validator: (value) => Validator.validateYear(value),
                           decoration: InputDecoration(
                               suffixIcon: DropdownButtonFormField(
-                                hint: Text(_yearController.text,
-                                    style: TextStyle(color: Colors.black)),
+                                hint: Container( //apply margin and padding using Container Widget.
+                                  padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                  child: Text(_yearController.text, style: TextStyle(color: Colors.black)),
+                                ),
                                 items: <String>[
                                   'Year 1',
                                   'Year 2',
@@ -505,7 +522,10 @@ class ProfilePageState extends State<MyProfilePage> {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child:
-                                        Text(value, textAlign: TextAlign.right),
+                                    Container( //apply margin and padding using Container Widget.
+                                      padding: EdgeInsets.only(left:8), //You can use EdgeInsets like above
+                                      child: Text(value),
+                                    )
                                   );
                                 }).toList(),
                                 onChanged: (value) {
