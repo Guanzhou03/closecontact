@@ -23,6 +23,7 @@ class ChatsHome extends StatelessWidget {
     initialMessages();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.amber[50],
         title: Center(
           child: Row(

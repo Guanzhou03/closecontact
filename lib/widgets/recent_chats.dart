@@ -38,58 +38,7 @@ class RecentChats extends State<RecentChatsPage> {
     return name;
   }
 
-  void deleteChat(int index) async {
-    String otherUserID = currConversations[index];
-    List<String> otherUserCurrConversations = await InfoGetter.currConvoGetter(userid: otherUserID);
-    var ref = await db.collection("users");
-    if (!mounted) return;
-    DocumentReference reference = db.collection("rooms").doc(maptoRoomID(otherUserID)); //that specific room
-    await reference.delete(); //delete that room
-    if (!mounted) return;
-    bool res = otherUserCurrConversations.remove(user.uid);
-    dynamic res2 = currConversations.removeAt(index);
-    setState(() {
-      ref.doc(otherUserID).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
-      ref.doc(user.uid).set({"currConvo": currConversations}, SetOptions(merge: true));
-      initialize();
-    });
-  }
 
-  void showAlertDialog(BuildContext context, int index) {
-    // set up the button
-    Widget okButton = TextButton(
-      child: Text("OK"),
-      onPressed: () {
-        setState(() {
-          deleteChat(index);
-        });
-        Navigator.of(context, rootNavigator: true).pop();
-      },
-    );
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop();
-      },
-    );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Delete Chat"),
-      content: Text("Are you sure you want to delete this chat?"),
-      actions: [
-        okButton,
-        cancelButton
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
   Future<void> currNameSetter(List<String> str) async {
     for (String item in str) {
       var temp = await maptoNames(item);
@@ -162,9 +111,6 @@ class RecentChats extends State<RecentChatsPage> {
                     //final room = snapshot.data![index];
                     return GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onLongPress:() {
-                          showAlertDialog(context, index);
-                        },
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

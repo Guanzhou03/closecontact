@@ -30,6 +30,7 @@ class ChatRequest extends State<ChatRequestPage> {
     requestedUIDs = await InfoGetter.currIncoming(userid: user.uid);
     await currNameSetter(requestedUIDs);
     await currImageSetter(requestedUIDs);
+    if (!mounted) return;
   }
 
   Future<String> maptoNames(id) async {
