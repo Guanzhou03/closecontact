@@ -42,16 +42,17 @@ class RecentChats extends State<RecentChatsPage> {
     String otherUserID = currConversations[index];
     List<String> otherUserCurrConversations = await InfoGetter.currConvoGetter(userid: otherUserID);
     var ref = await db.collection("users");
+    if (!mounted) return;
     DocumentReference reference = db.collection("rooms").doc(maptoRoomID(otherUserID)); //that specific room
     await reference.delete(); //delete that room
+    if (!mounted) return;
     bool res = otherUserCurrConversations.remove(user.uid);
     dynamic res2 = currConversations.removeAt(index);
-    setState(() async{
-      await ref.doc(otherUserID).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
-      await ref.doc(user.uid).set({"currConvo": currConversations}, SetOptions(merge: true));
+    setState(() {
+      ref.doc(otherUserID).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
+      ref.doc(user.uid).set({"currConvo": currConversations}, SetOptions(merge: true));
+      initialize();
     });
-
-    return;
   }
 
   void showAlertDialog(BuildContext context, int index) {
@@ -92,6 +93,7 @@ class RecentChats extends State<RecentChatsPage> {
   Future<void> currNameSetter(List<String> str) async {
     for (String item in str) {
       var temp = await maptoNames(item);
+      if (!mounted) return;
       requestedNames.add(temp);
     }
   }
