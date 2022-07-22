@@ -1,17 +1,29 @@
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/screens/chats.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:user_profile_avatar/user_profile_avatar.dart';
 
-class RecentChats extends StatelessWidget {
+class RecentChatsPage extends StatefulWidget {
   final User user;
   List<String> currConversations = []; //list of userIDS that user is talking to
-  RecentChats(this.user, this.currConversations, {Key? key}) : super(key: key);
+  RecentChatsPage(this.user, this.currConversations, {Key? key}) : super(key: key);
+
+  @override
+  RecentChats createState() => RecentChats(user, currConversations);
+}
+
+
+class RecentChats extends State<RecentChatsPage> {
+  final User user;
+  List<String> currConversations = []; //list of userIDS that user is talking to
+  RecentChats(this.user, this.currConversations);
   List<String> requestedNames = [];
   List<String> requestedImages = [];
   List<String> roomIDs = [];
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   initialize() async {
     currConversations = await InfoGetter.currConvoGetter(userid: user.uid);
@@ -26,9 +38,11 @@ class RecentChats extends StatelessWidget {
     return name;
   }
 
+
   Future<void> currNameSetter(List<String> str) async {
     for (String item in str) {
       var temp = await maptoNames(item);
+      if (!mounted) return;
       requestedNames.add(temp);
     }
   }
@@ -95,7 +109,6 @@ class RecentChats extends StatelessWidget {
                   itemCount: currConversations.length,
                   itemBuilder: (context, index) {
                     //final room = snapshot.data![index];
-
                     return GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {

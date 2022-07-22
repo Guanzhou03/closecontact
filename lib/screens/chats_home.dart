@@ -23,6 +23,7 @@ class ChatsHome extends StatelessWidget {
     initialMessages();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.amber[50],
         title: Center(
           child: Row(
@@ -86,7 +87,7 @@ class ChatsHome extends StatelessWidget {
               ),
               child: Container(
                 //feel free to edit decorations
-                child: RecentChats(this.user,
+                child: RecentChatsPage(this.user,
                     currConversations), //user we need to retrieve from database
               ),
             ),

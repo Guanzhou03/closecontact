@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:close_contact/screens/chats_home.dart';
 
 class BotNavBar extends StatelessWidget {
-  User user;
+  final User user;
   BotNavBar(this.user, {Key? key}) : super(key: key);
 
   List<Widget> _buildScreens() {

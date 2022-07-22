@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:close_contact/firestore/info-getter.dart';
 import 'package:close_contact/models/database.dart';
 import 'package:close_contact/models/text.dart';
+import 'package:close_contact/screens/chats_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -244,6 +245,61 @@ class _ChatState extends State<Chat> {
     return widget.me.compareTo(id) > 0 ? widget.me + id : id + widget.me;
   }
 
+  Future<void> deleteChat() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<String> currConversations = await InfoGetter.currConvoGetter(userid: widget.me);
+    List<String> otherUserCurrConversations = await InfoGetter.currConvoGetter(userid: widget.other);
+    var ref = await db.collection("users");
+    if (!mounted) return;
+    DocumentReference reference = db.collection("rooms").doc(maptoRoomID(widget.other)); //that specific room
+    await reference.delete(); //delete that room
+    if (!mounted) return;
+    bool res = otherUserCurrConversations.remove(widget.me);
+    dynamic res2 = currConversations.remove(widget.other);
+    setState(() {
+      ref.doc(widget.other).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
+      ref.doc(widget.me).set({"currConvo": currConversations}, SetOptions(merge: true));
+    });
+  }
+
+  void showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () async {
+        await deleteChat();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => ChatsHome(FirebaseAuth.instance.currentUser!))
+        );
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Chat"),
+      content: Text("Are you sure you want to delete this chat?"),
+      actions: [
+        okButton,
+        cancelButton
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void handleClick(String value) async {
     if (value == 'Report user') {
       Navigator.of(context).push(MaterialPageRoute(
@@ -268,12 +324,16 @@ class _ChatState extends State<Chat> {
             context: context,
             builder: (context) =>
                 AlertDialog(content: Text("Blocked/Unblocked successfully")));
+
       } else {
         showDialog(
             context: context,
             builder: (context) =>
                 AlertDialog(content: Text("You are already blocked")));
       }
+    }
+    else if (value == "Delete chat") {
+      showAlertDialog(context);
     }
   }
 
@@ -292,7 +352,7 @@ class _ChatState extends State<Chat> {
                 PopupMenuButton<String>(
                   onSelected: handleClick,
                   itemBuilder: (BuildContext context) {
-                    return {'Report user', "Block/Unblock user"}
+                    return {'Report user', "Block/Unblock user", "Delete chat"}
                         .map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
