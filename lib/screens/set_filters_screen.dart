@@ -102,31 +102,16 @@ class _FilterScreenState extends State<FilterScreen> {
         if (snapshot.connectionState == ConnectionState.done) {
           print(_gender);
           return Scaffold(
-            appBar: AppBar(
-              leading: BackButton(
-                  color: Colors.black,
-                  onPressed: () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => MyProfilePage(widget.user)),
-                      )),
-              backgroundColor: Colors.amber[50],
-              title: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "Set Your Preferences",
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            body: Container(
-              constraints: BoxConstraints.expand(),
+            extendBody: true,
+            floatingActionButton: IconButton(icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) => MyProfilePage(widget.user)),
+              )),
+            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+            body: Stack(children: [
+              Container(
+              padding: EdgeInsets.only(top: 60),
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/logo_transparent2.png"),
@@ -136,9 +121,9 @@ class _FilterScreenState extends State<FilterScreen> {
                 children: <Widget>[
                   Text(
                     "Select all that apply",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                   ),
-                  Text("Gender"),
+                  Container(child: Text("Gender", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)), padding: EdgeInsets.only(top: 20)),
                   Row(
                     children: [
                       onOffButton(_gender, 0, "Male"),
@@ -147,7 +132,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
-                  Text("Faculty"),
+                  Text("Faculty", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   Row(
                     children: [
                       onOffButton(_faculty, 0, "Computing"),
@@ -166,7 +151,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
-                  Text("Year"),
+                  Text("Year", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   Row(
                     children: [
                       onOffButton(_year, 0, "Year 1"),
@@ -183,7 +168,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
-                  Text("Area"),
+                  Text("Area", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   Row(
                     children: [
                       onOffButton(_area, 0, "North"),
@@ -194,7 +179,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
-                  Text("Interests"),
+                  Text("Interests", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   Row(
                     children: [
                       onOffButton(_interests, 0, "Movies"),
@@ -247,8 +232,8 @@ class _FilterScreenState extends State<FilterScreen> {
                   ),
                 ],
               ),
-            ),
-          );
+            )]
+          ));
         }
         return Text("ERROR");
       }),

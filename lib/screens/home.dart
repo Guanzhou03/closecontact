@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
 
       appBar: AppBar(title: const Text("Find Close Contacts"), actions: [
         ElevatedButton.icon(icon: Icon(Icons.report), label: Text("Report a bug"),
-    style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+    style: ElevatedButton.styleFrom(primary: Colors.orange),
     onPressed: () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
