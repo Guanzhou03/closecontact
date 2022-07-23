@@ -41,7 +41,7 @@ class ReportBug extends State<ReportBugPage> {
           )),
       Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.fromLTRB(15, 10, 0, 5),
+      padding: const EdgeInsets.fromLTRB(25, 10, 0, 5),
       child: Column(
         children: <Widget>[
           const Text('Type of issue ',
@@ -50,13 +50,14 @@ class ReportBug extends State<ReportBugPage> {
       ),
     ),
       Container(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           controller: _issueController,
           decoration: InputDecoration(
               suffixIcon: DropdownButtonFormField(
-                hint: Text("Select type of issue",
+                hint: Container(child: Text("Select type of issue",
                     style: TextStyle(color: Colors.black)),
+                    padding: EdgeInsets.only(left:8)),
                 items: <String>[
                   'Bug',
                   'Feedback',
@@ -65,7 +66,7 @@ class ReportBug extends State<ReportBugPage> {
                   return DropdownMenuItem<String>(
                     value: value,
                     child:
-                    Text(value, textAlign: TextAlign.right),
+                    Container(child: Text(value), padding: EdgeInsets.only(left:8)),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -80,13 +81,13 @@ class ReportBug extends State<ReportBugPage> {
       ),
       Container(
           alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+          padding: const EdgeInsets.fromLTRB(25, 0, 0, 5),
           child: const Text(
             'Description',
             style: TextStyle(fontSize: 14),
           )),
       Container(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           controller: _descriptionController,
           maxLength: 500,

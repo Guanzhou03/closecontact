@@ -537,13 +537,14 @@ class ProfilePageState extends State<MyProfilePage> {
                               border: OutlineInputBorder()),
                         ),
                       ),
-
+                      Stack(children:[
                       Container(
-                        margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
-                        height: 40,
-                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: ElevatedButton(
-                          child: const Text('Save Info'),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(left: 30),
+                        height: 70,
+                            child: Align(alignment: Alignment(-1.0, 0),
+                                child: ElevatedButton(
+                          child: Text("Save Info"),
                           style: ElevatedButton.styleFrom(primary: Colors.blue),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -565,18 +566,18 @@ class ProfilePageState extends State<MyProfilePage> {
                               user.updatePhotoURL(imageUrl);
                             }
                           },
-                        ),
+                        )),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(130, 20, 130, 0),
-                        height: 40,
-                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Set Your Preferences',
+                        alignment: Alignment.center,
+                        height: 70,
+                        child: Align(alignment: Alignment(0.65, 0),
+                            child:ElevatedButton(
+                          child: Text('Set Your Preferences',
                             textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
                           ),
-                          style: ElevatedButton.styleFrom(primary: Colors.blue),
+                          style: ElevatedButton.styleFrom(primary: Colors.blue, alignment: Alignment.center),
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
@@ -584,13 +585,13 @@ class ProfilePageState extends State<MyProfilePage> {
                                       FilterScreen(this.user)),
                             );
                           },
-                        ),
-                      ),
+                        )),
+                      )]),
                       Container(
-                        margin: EdgeInsets.fromLTRB(130, 40, 130, 60),
-                        height: 40,
-                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: ElevatedButton(
+                        alignment: Alignment.center,
+                        height: 70,
+                        child: Align(
+                            child: ElevatedButton(
                           child: const Text('Log Out'),
                           style: ElevatedButton.styleFrom(primary: Colors.red),
                           onPressed: () async {
@@ -605,7 +606,7 @@ class ProfilePageState extends State<MyProfilePage> {
                               (_) => false,
                             );
                           },
-                        ),
+                        )),
                       ),
                     ],
                   );

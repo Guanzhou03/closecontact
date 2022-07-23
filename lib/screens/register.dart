@@ -112,10 +112,9 @@ class Register extends StatelessWidget {
                           password: _password1Controller.text,
                         );
                         if (user != null) {
-                          await user.sendEmailVerification();
+                          user.sendEmailVerification();
                           //add user into Cloud Firestore
-                          CollectionReference users =
-                              await db.collection('users');
+                          CollectionReference users = await db.collection('users');
                           await users
                               .doc(user.uid)
                               .set({

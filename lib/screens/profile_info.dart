@@ -102,43 +102,83 @@ class ProfileInfo extends StatelessWidget {
                   Text(_nameController.text +
                       ", " +
                       _yearController.text +
-                      " " +
+                      ", " +
                       _facultyController.text, style: TextStyle(fontSize: 15)),
                   Container(
-                    child: Text("Bio: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17)),
-                    padding: EdgeInsets.fromLTRB(0, 20, 340, 0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text('Bio: ',
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17)
+                          ),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 20, 340, 0),
                   ),
                   Container(
                     child: Text(_bioController.text),
                     padding: EdgeInsets.fromLTRB(0, 0, 190, 0),
                   ),
                   Container(
-                    child: Text("Gender: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17)),
-                    padding: EdgeInsets.fromLTRB(0, 20, 310, 0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text('Gender: ',
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17)
+                          ),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 20, 340, 0),
                   ),
                   Container(
                     child: Text(_genderController.text),
                     padding: EdgeInsets.fromLTRB(0, 0, 190, 0),
                   ),
                   Container(
-                    child: Text("Location: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17)),
-                    padding: EdgeInsets.fromLTRB(5, 20, 305, 0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text('Location: ',
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17)
+                          ),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 20, 340, 0),
                   ),
                   Container(
                     child: Text(_areaController.text),
                     padding: EdgeInsets.fromLTRB(0, 0, 190, 0),
                   ),
                   Container(
-                    child: Text("Interests: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17)),
-                    padding: EdgeInsets.fromLTRB(0, 20, 300, 0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text('Interests: ',
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17)
+                          ),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 20, 340, 0),
                   ),
 
                   ListView.builder(
