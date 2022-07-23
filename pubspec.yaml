@@ -50,6 +50,7 @@ dependencies:
   flutter_chat_ui: ^1.6.2
   file_picker: ^3.0.4
   ntp: ^2.0.0
+  mockito: ^5.2.0
 
 dev_dependencies:
   integration_test:
