@@ -49,6 +49,7 @@ class Register extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                 child: TextFormField(
+                  key: Key("name"),
                   controller: _nameController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -60,6 +61,7 @@ class Register extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextFormField(
+                  key: Key("email"),
                   controller: _emailController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -71,6 +73,7 @@ class Register extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: TextFormField(
+                  key: Key("password"),
                   obscureText: true,
                   controller: _password1Controller,
                   decoration: const InputDecoration(
@@ -84,6 +87,7 @@ class Register extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
                 child: TextFormField(
+                  key: Key("confirmPassword"),
                   obscureText: true,
                   controller: _password2Controller,
                   decoration: const InputDecoration(
