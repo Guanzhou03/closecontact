@@ -220,6 +220,28 @@ class CardsStackWidgetState extends State<CardsStackWidget>
                       );
                     },
                     onAccept: (int index) async {
+                      var currUserInfo =
+                          await db.collection("users").doc(_user!.uid).get();
+                      var currMap = currUserInfo.data();
+                      var bool = currMap!.containsKey("Name") &&
+                          currMap.containsKey("imageURL") &&
+                          currMap["imageURL"] != " " &&
+                          currMap.containsKey("userid") &&
+                          currMap.containsKey("Email") &&
+                          currMap.containsKey("bio") &&
+                          currMap.containsKey("year") &&
+                          currMap.containsKey("activities") &&
+                          currMap.containsKey("faculty");
+                      if (!bool) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: Text(
+                                "Please complete your profile before swiping!"),
+                          ),
+                        );
+                        return null;
+                      }
                       await InfoSetter.setSeenUsers(
                           currUser: _user!.uid,
                           userid: userIdList[index],
@@ -249,10 +271,6 @@ class CardsStackWidgetState extends State<CardsStackWidget>
                     },
                     onAccept: (int index) async {
                       var currUserId = userIdList[index];
-                      await InfoSetter.setSeenUsers(
-                          currUser: _user!.uid,
-                          userid: currUserId,
-                          seenUsers: _seenUsers);
                       var snapshot = await db
                           .collection("users")
                           .doc(currUserId)
@@ -281,6 +299,10 @@ class CardsStackWidgetState extends State<CardsStackWidget>
                           );
                           return null;
                         }
+                        await InfoSetter.setSeenUsers(
+                            currUser: _user!.uid,
+                            userid: currUserId,
+                            seenUsers: _seenUsers);
 
                         List<String>? idList =
                             await InfoGetter.currIncoming(userid: currUserId);
