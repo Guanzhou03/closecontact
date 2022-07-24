@@ -38,6 +38,13 @@ class ProfileCard extends StatelessWidget {
   }
 
   Widget chipList(List<String> interestsList) {
+    if (interestsList.length > 4) {
+      List<String> temp = interestsList.sublist(0, 4);
+      return Wrap(
+          spacing: 3.0,
+          children:
+          temp.map((interest) => _buildChip(interest)).toList());
+    }
     return Wrap(
         spacing: 3.0,
         children:
@@ -61,7 +68,7 @@ class ProfileCard extends StatelessWidget {
           Positioned(
             bottom: 0,
             child: Container(
-              height: 165,
+              height: 115,
               width: 340,
               decoration: ShapeDecoration(
                 color: Colors.white,
