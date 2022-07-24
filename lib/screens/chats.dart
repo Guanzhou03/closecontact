@@ -211,11 +211,13 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  void assignBlockState() async {
+  Future<void> assignBlockState() async {
     print("state changed");
     var temp = await InfoGetter.blockedStatusGetter(roomID: widget.chatRoomId);
+    if (!mounted) return;
     setState(() {
       isBlocked = temp;
+      print(isBlocked);
     });
   }
 
@@ -226,7 +228,7 @@ class _ChatState extends State<Chat> {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference reference = db.collection("rooms").doc(widget.chatRoomId);
     reference.snapshots().listen((querySnapshot) async {
-      assignBlockState();
+      await assignBlockState();
     });
   }
 
@@ -323,7 +325,6 @@ class _ChatState extends State<Chat> {
         setState(() {
           isBlocked = !isBlocked;
         });
-        print(isBlocked);
         showDialog(
             context: context,
             builder: (context) =>
