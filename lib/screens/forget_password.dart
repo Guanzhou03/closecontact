@@ -7,15 +7,6 @@ class ForgetPassword extends StatelessWidget {
   var _emailController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
 
-  // Future<AuthCredential> resetPassword({required String email}) async {
-  //   await _auth
-  //       .sendPasswordResetEmail(email: email)
-  //       .then((value) => _status = AuthCredential)
-  //       .catchError(
-  //           (e) => _status = AuthExceptionHandler.handleAuthException(e));
-  //   return _status;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -51,6 +42,7 @@ class ForgetPassword extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             child: TextFormField(
+              key: Key("resetEmail"),
               controller: _emailController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
