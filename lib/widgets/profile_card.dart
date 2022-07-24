@@ -61,7 +61,7 @@ class ProfileCard extends StatelessWidget {
           Positioned(
             bottom: 0,
             child: Container(
-              height: 121,
+              height: 165,
               width: 340,
               decoration: ShapeDecoration(
                 color: Colors.white,
@@ -76,7 +76,7 @@ class ProfileCard extends StatelessWidget {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +86,7 @@ class ProfileCard extends StatelessWidget {
                       style: const TextStyle(
                         fontFamily: 'Nunito',
                         fontWeight: FontWeight.w800,
-                        fontSize: 21,
+                        fontSize: 18,
                       ),
                     ),
                     profile.interests == ""

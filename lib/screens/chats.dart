@@ -110,7 +110,6 @@ class _ChatState extends State<Chat> {
                 if (!isBlocked)
                   addMessage();
                 else {
-                  print(isBlocked);
                   showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -320,6 +319,7 @@ class _ChatState extends State<Chat> {
         setState(() {
           isBlocked = !isBlocked;
         });
+        print(isBlocked);
         showDialog(
             context: context,
             builder: (context) =>
