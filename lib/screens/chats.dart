@@ -224,7 +224,7 @@ class _ChatState extends State<Chat> {
   Future<void> initialise() async {
     myName = await InfoGetter.nameGetter(userID: widget.me);
     otherName = await InfoGetter.nameGetter(userID: widget.other);
-    isBlocked = await InfoSetter.setRoomState(roomID: widget.chatRoomId);
+    await InfoSetter.setRoomState(roomID: widget.chatRoomId);
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference reference = db.collection("rooms").doc(widget.chatRoomId);
     reference.snapshots().listen((querySnapshot) async {
