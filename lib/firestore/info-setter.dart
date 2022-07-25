@@ -46,7 +46,7 @@ class InfoSetter {
     ref.set({"incoming": result}, SetOptions(merge: true));
   }
 
-  static Future<bool> setRoomState({required String roomID}) async {
+  static Future<void> setRoomState({required String roomID}) async {
     bool isBlocked = false;
     String? initiator = "";
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -60,7 +60,6 @@ class InfoSetter {
         });
     await ref.set({"isBlocked": isBlocked}, SetOptions(merge: true));
     await ref.set({"initiator": initiator}, SetOptions(merge: true));
-    return isBlocked;
   }
 
   static Future<void> toggleBlockedState(

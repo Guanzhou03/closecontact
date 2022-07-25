@@ -68,35 +68,37 @@ class ChatRequest extends State<ChatRequestPage> {
     String result = requestedNames[index];
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
-      onTap:() => Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProfileInfo(user, requestedUIDs[index])),
-      ),
-        child:Row(
-      children: [
-        Column(children: [
-          UserProfileAvatar(
-            avatarUrl: requestedImages[index],
-            onAvatarTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfileInfo(user, requestedUIDs[index])),
-              );
-            },
-            avatarSplashColor: Colors.purple,
-            radius: 50,
-            isActivityIndicatorSmall: false,
-            avatarBorderData: AvatarBorderData(
-              borderColor: Colors.white,
-              borderWidth: 5.0,
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ProfileInfo(user, requestedUIDs[index])),
             ),
-          ),
-        ]),
-        Text(result)
-      ],
-    ));
+        child: Row(
+          children: [
+            Column(children: [
+              UserProfileAvatar(
+                avatarUrl: requestedImages[index],
+                onAvatarTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileInfo(user, requestedUIDs[index])),
+                  );
+                },
+                avatarSplashColor: Colors.purple,
+                radius: 50,
+                isActivityIndicatorSmall: false,
+                avatarBorderData: AvatarBorderData(
+                  borderColor: Colors.white,
+                  borderWidth: 5.0,
+                ),
+              ),
+            ]),
+            Text(result)
+          ],
+        ));
   }
 
   @override
@@ -107,7 +109,7 @@ class ChatRequest extends State<ChatRequestPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
             leading: BackButton(
-                onPressed: () => Navigator.pushReplacement(
+                onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ChatsHome(user)),
                     )),

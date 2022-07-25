@@ -211,21 +211,24 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  void assignBlockState() async {
+  Future<void> assignBlockState() async {
     print("state changed");
-    isBlocked = await InfoGetter.blockedStatusGetter(roomID: widget.chatRoomId);
+    var temp = await InfoGetter.blockedStatusGetter(roomID: widget.chatRoomId);
+    if (!mounted) return;
+    setState(() {
+      isBlocked = temp;
+      print(isBlocked);
+    });
   }
 
   Future<void> initialise() async {
     myName = await InfoGetter.nameGetter(userID: widget.me);
     otherName = await InfoGetter.nameGetter(userID: widget.other);
-    isBlocked = await InfoSetter.setRoomState(roomID: widget.chatRoomId);
+    await InfoSetter.setRoomState(roomID: widget.chatRoomId);
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference reference = db.collection("rooms").doc(widget.chatRoomId);
     reference.snapshots().listen((querySnapshot) async {
-      setState(() {
-        assignBlockState();
-      });
+      await assignBlockState();
     });
   }
 
@@ -246,18 +249,25 @@ class _ChatState extends State<Chat> {
 
   Future<void> deleteChat() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    List<String> currConversations = await InfoGetter.currConvoGetter(userid: widget.me);
-    List<String> otherUserCurrConversations = await InfoGetter.currConvoGetter(userid: widget.other);
+    List<String> currConversations =
+        await InfoGetter.currConvoGetter(userid: widget.me);
+    List<String> otherUserCurrConversations =
+        await InfoGetter.currConvoGetter(userid: widget.other);
     var ref = await db.collection("users");
     if (!mounted) return;
-    DocumentReference reference = db.collection("rooms").doc(maptoRoomID(widget.other)); //that specific room
+    DocumentReference reference = db
+        .collection("rooms")
+        .doc(maptoRoomID(widget.other)); //that specific room
     await reference.delete(); //delete that room
     if (!mounted) return;
     bool res = otherUserCurrConversations.remove(widget.me);
     dynamic res2 = currConversations.remove(widget.other);
     setState(() {
-      ref.doc(widget.other).set({"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
-      ref.doc(widget.me).set({"currConvo": currConversations}, SetOptions(merge: true));
+      ref.doc(widget.other).set(
+          {"currConvo": otherUserCurrConversations}, SetOptions(merge: true));
+      ref
+          .doc(widget.me)
+          .set({"currConvo": currConversations}, SetOptions(merge: true));
     });
   }
 
@@ -267,10 +277,9 @@ class _ChatState extends State<Chat> {
       child: Text("OK"),
       onPressed: () async {
         await deleteChat();
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) => ChatsHome(FirebaseAuth.instance.currentUser!))
-        );
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) =>
+                ChatsHome(FirebaseAuth.instance.currentUser!)));
         Navigator.of(context, rootNavigator: true).pop();
       },
     );
@@ -284,10 +293,7 @@ class _ChatState extends State<Chat> {
     AlertDialog alert = AlertDialog(
       title: Text("Delete Chat"),
       content: Text("Are you sure you want to delete this chat?"),
-      actions: [
-        okButton,
-        cancelButton
-      ],
+      actions: [okButton, cancelButton],
     );
 
     // show the dialog
@@ -319,20 +325,17 @@ class _ChatState extends State<Chat> {
         setState(() {
           isBlocked = !isBlocked;
         });
-        print(isBlocked);
         showDialog(
             context: context,
             builder: (context) =>
                 AlertDialog(content: Text("Blocked/Unblocked successfully")));
-
       } else {
         showDialog(
             context: context,
             builder: (context) =>
                 AlertDialog(content: Text("You are already blocked")));
       }
-    }
-    else if (value == "Delete chat") {
+    } else if (value == "Delete chat") {
       showAlertDialog(context);
     }
   }
