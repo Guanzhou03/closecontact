@@ -46,7 +46,6 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   initState() {
-    print(widget.user.uid);
     super.initState();
     _future = initialise();
   }
@@ -100,7 +99,6 @@ class _FilterScreenState extends State<FilterScreen> {
           return CircularProgressIndicator();
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          print(_gender);
           return Scaffold(
             extendBody: true,
             floatingActionButton: IconButton(icon: Icon(Icons.arrow_back),

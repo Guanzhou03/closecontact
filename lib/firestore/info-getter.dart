@@ -175,7 +175,6 @@ class InfoGetter {
   }
 
   static Future<List<Profile>> cardStackCreator({required user}) async {
-    print(user.uid);
     var prefList = await prefGetter(userid: user.uid);
     List<bool> genderList = [];
     List<bool> facultyList = [];
@@ -192,7 +191,6 @@ class InfoGetter {
     var temp = await getValidUsers();
     var result = await temp.map((e) {
       var uid = e["userid"];
-      print(uid);
       var name = e["Name"];
       var interests = e["activities"];
       var imageURL = e["imageURL"];

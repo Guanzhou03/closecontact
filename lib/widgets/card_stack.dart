@@ -46,23 +46,19 @@ class CardsStackWidgetState extends State<CardsStackWidget>
   }
 
   Future<void> loadProfiles() async {
-    print("Profiles loaded");
     await auth.authStateChanges().listen((User? user) {
       _user = user;
     });
     try {
       var temp = await InfoGetter.cardStackCreator(user: _user);
       var seenUsers = await InfoGetter.seenUsersGetter(userID: _user!.uid);
-      print("seen users are: " + seenUsers.toString());
       var temp1 =
           await RecommendationAlgo().sortProfiles(temp, _user!, seenUsers);
       var temp2 = await InfoGetter.userIdListGetter(profileList: temp1);
       setState(() {
         draggableItems = temp1;
         _seenUsers = seenUsers;
-        print(temp1);
         userIdList = temp2;
-        print(temp2);
       });
     } catch (e) {
       print(e);
@@ -70,12 +66,7 @@ class CardsStackWidgetState extends State<CardsStackWidget>
   }
 
   static Future<void> removeLast() async {
-    // if (draggableItems.length == 2) {
-    //   var temp = await InfoGetter.cardStackCreator(user: user);
-    //   draggableItems.addAll(temp);
-    // } else {
     draggableItems.removeLast();
-    //}
   }
 
   @override
@@ -309,8 +300,6 @@ class CardsStackWidgetState extends State<CardsStackWidget>
                         List<String> currConvo =
                             await InfoGetter.currConvoGetter(
                                 userid: currUserId);
-                        print(currUserId);
-                        print(_user!.uid);
                         if (idList.isEmpty) {
                           if (currConvo.isEmpty ||
                               !currConvo.contains(_user!.uid)) {

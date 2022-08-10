@@ -71,7 +71,6 @@ class ReportBug extends State<ReportBugPage> {
                 }).toList(),
                 onChanged: (value) {
                   _issueController.text = value as String;
-                  print(_issueController.text);
                 },
               ),
               contentPadding:
@@ -109,7 +108,6 @@ class ReportBug extends State<ReportBugPage> {
           child: const Text('Submit form'),
           style: ElevatedButton.styleFrom(primary: Colors.blue),
           onPressed: () {
-            print(_issueController.text);
             feedbackCollection.add({
               'type': _issueController.text,
               'description': _descriptionController.text

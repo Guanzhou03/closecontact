@@ -93,8 +93,7 @@ class SignIn extends StatelessWidget {
                       );
                       if (user != null) {
                         // disabled email verification for now,
-                        if (false) {
-                        // if (false) {
+                        if (!user.emailVerified) {
                           showAlertDialog(context);
                           await user.sendEmailVerification();
                         } else {

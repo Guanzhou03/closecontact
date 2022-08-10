@@ -77,7 +77,6 @@ class InfoSetter {
     } else if (!isBlocked && (initiator == blocker || blocker == "")) {
       await ref.update({"isBlocked": true});
       await ref.set({"initiator": initiator}, SetOptions(merge: true));
-      print("blocked");
     }
   }
 

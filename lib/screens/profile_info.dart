@@ -89,7 +89,6 @@ class ProfileInfo extends StatelessWidget {
                         ? 'https://picsum.photos/id/237/5000/5000'
                         : imageUrl,
                     onAvatarTap: () {
-                      print("tapped");
                     },
                     avatarSplashColor: Colors.purple,
                     radius: 80,
