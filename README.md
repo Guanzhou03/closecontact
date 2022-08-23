@@ -159,7 +159,9 @@ This section of the readme covers the login and authentication process, key func
 >
 > 1.4 Login Page
 >
-> ![][3]![][4]
+![image1](https://user-images.githubusercontent.com/35629932/186139207-38277ad9-9f63-48d1-b909-b03fc3f6bcf2.png)
+![image2](https://user-images.githubusercontent.com/35629932/186139279-73b3cee6-1ccf-4bc8-881b-31d35189d948.png)
+
 
 Login page Register page
 
