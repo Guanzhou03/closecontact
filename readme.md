@@ -1,17 +1,7 @@
 # Introduction
 
 Hello! We are Alvin Jiang and Chen Guanzhou, developers of Close
-Contact, an android friend-finding app, and this is our readme, which
-also serves as a documentation to why and how we came to undertake this
-project. Throughout this document, you will understand why we believe
-our project is meaningful and the motivation behind it.
-
-We will also elaborate on the features that we have decided to
-implement, providing a program flow to understand how our app is
-structured. After which, we detailed the various Software Engineering
-Principles we have adopted, followed by the project log to detail the
-time each of us have spent over the course of this project.
-
+Contact, an android friend-finding app.
 # Motivation 
 
 As students facing the challenges of interacting with others amidst the
