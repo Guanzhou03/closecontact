@@ -42,9 +42,12 @@ To try the app out yourself, download the apk here:
 [**https://drive.google.com/file/d/1UpY7zVAml_6G90qV2IdoBKcsFMvDqI-s/view?usp=sharing**](https://drive.google.com/file/d/1UpY7zVAml_6G90qV2IdoBKcsFMvDqI-s/view?usp=sharing)
 
 To read our full documentation of the project: 
+
 https://docs.google.com/document/d/1XsqmUDs44Psu4BHj9sLlEwM9g26gF499aNpOLsVZE-A/edit?usp=sharing
 
 Some snapshots of the app:
+
+
 ![image1](https://user-images.githubusercontent.com/35629932/188270124-461cb2ac-98b1-428d-9ca5-d072099861d8.png)
 ![image20](https://user-images.githubusercontent.com/35629932/188270153-ee4c2522-2b58-4e3f-9285-3e4caefab356.png)
 ![image22](https://user-images.githubusercontent.com/35629932/188270159-a93a3f72-053b-4fc1-97d7-d3d3fe7f8a21.png)
