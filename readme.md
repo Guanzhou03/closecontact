@@ -48,6 +48,6 @@ https://docs.google.com/document/d/1XsqmUDs44Psu4BHj9sLlEwM9g26gF499aNpOLsVZE-A/
 Some snapshots of the app:
 
 
-![image1](https://user-images.githubusercontent.com/35629932/188270124-461cb2ac-98b1-428d-9ca5-d072099861d8.png)
-![image20](https://user-images.githubusercontent.com/35629932/188270153-ee4c2522-2b58-4e3f-9285-3e4caefab356.png)
+![image1](https://user-images.github![profile](https://user-images.githubusercontent.com/35629932/188270756-8555239d-4baf-449c-8430-6cb967b28d53.jpg)
+usercontent.com/35629932/188270124-461cb2ac-98b1-428d-9ca5-d072099861d8.png)
 ![image22](https://user-images.githubusercontent.com/35629932/188270159-a93a3f72-053b-4fc1-97d7-d3d3fe7f8a21.png)
